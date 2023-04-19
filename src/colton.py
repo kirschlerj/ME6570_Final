@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 columns = ('x', 'y', 'z')
-mesh = pd.read_csv("data\Feeder_Bracket_2.inp", skiprows=3, names=columns)
+mesh = pd.read_csv(r"data\Nozzle_Fastener.inp", skiprows=3, names=columns)
 print(mesh)
 mesh2 = mesh.to_numpy()
 
