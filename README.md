@@ -12,6 +12,14 @@ Final Project for John Cotton's ME6570
 
 Install gmsh from this website: https://gmsh.info/#Download
 
+Gmsh Python API: https://gitlab.onelab.info/gmsh/gmsh/blob/gmsh_4_11_1/api/gmsh.py#L4997
+
+### gmsh Python API
+
+See colton2.py
+
+
+### gmsh GUI, not recommended to use
 1. Open .stp file
 2. Geometry > Add > Volume
 3. Select entire volume
