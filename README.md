@@ -1,6 +1,13 @@
 # ME6570_Final
 Final Project for John Cotton's ME6570
 
+## Team Roles
+
+- Cameron Roback: CEO
+- Daniel Bridavsky: CTO
+- Jack Kirschler: Mathematician
+- Colton Wright: Generalist
+
 ## gmsh
 
 Install gmsh from this website: https://gmsh.info/#Download
