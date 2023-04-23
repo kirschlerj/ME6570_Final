@@ -26,3 +26,16 @@ See colton2.py
 4. Mesh > Define > 3D
 5. Export as Abaqus INP (*.inp) so it can work with our python scripts
 
+## TODO
+
+- Input
+- Engine
+- Output
+    - Dan
+- Problem statement stuff
+- Comparison
+- User manual
+- Flowchart
+    - High level broad
+    - Engine flowchart, more details
+- 
