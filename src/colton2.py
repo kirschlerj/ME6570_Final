@@ -12,6 +12,7 @@ import pandas as pd
 import scipy
 import math
 import gmsh
+import meshio
 import sys
 import os
 
@@ -95,7 +96,7 @@ if surf:
 gmsh.option.setNumber("Mesh.MeshSizeMin", 3)
 gmsh.option.setNumber("Mesh.MeshSizeMax", 3)
 gmsh.model.mesh.generate(3)
-# gmsh.write("t20.msh")
+gmsh.write(os.path.join("data", "t20.msh"))
 
 # Launch the GUI to see the results:
 # gmsh.fltk.run()
@@ -107,14 +108,23 @@ mesh_var = gmsh.model.mesh.getNodes()
 # Get all the entities inside of the current model
 entities = gmsh.model.getEntities()
 
-print(entities)
-print(type(entities))
-print(len(entities))
-print(type(entities[0]))
-print(len(entities[0]))
-
+# Close gmsh
 gmsh.finalize()
 
+# Use meshio to read gmsh file...
+meshio_mesh = meshio.read(os.path.join("data", "t20.msh"))
+#------------------------------------------------------------------------------
+
+# connectivity = meshio_mesh.cells["triangle"]
+print("meshio_mesh:\n", meshio_mesh)
+print("\n#------------------------------------------------------------------------------\n")
+print("meshio_mesh.points", meshio_mesh.points)
+print("\n#------------------------------------------------------------------------------\n")
+print("meshio_mesh.cells\n", meshio_mesh.cells)
+print("\n#------------------------------------------------------------------------------\n")
+print("meshio_mesh.cells_dict:\n",meshio_mesh.cells_dict)
+print("\n#------------------------------------------------------------------------------\n")
+print("len(meshio_mesh.points)\n", len(meshio_mesh.points))
 
 x, y, z = mesh_var[1][0::3], mesh_var[1][1::3], mesh_var[1][2::3]
 fig = plt.figure()
