@@ -126,9 +126,26 @@ print("meshio_mesh.cells_dict:\n",meshio_mesh.cells_dict)
 print("\n#------------------------------------------------------------------------------\n")
 print("len(meshio_mesh.points)\n", len(meshio_mesh.points))
 
-x, y, z = mesh_var[1][0::3], mesh_var[1][1::3], mesh_var[1][2::3]
+print("\n#------------------------------------------------------------------------------\n")
+print("meshio_mesh.cells_dict[\"tetra\"]:\n",meshio_mesh.cells_dict["tetra"])
+print("\n#------------------------------------------------------------------------------\n")
+print("len(meshio_mesh.cells_dict[\"tetra\"]):\n",len(meshio_mesh.cells_dict["tetra"]))
+print("\n#------------------------------------------------------------------------------\n")
+
 fig = plt.figure()
 ax = fig.add_subplot(projection='3d')
-ax.scatter(x,y,z)
-ax.axis('equal')
-# plt.show()
+
+for tet in meshio_mesh.cells_dict["tetra"]:
+    ax.scatter(meshio_mesh.points[tet[0], 0], meshio_mesh.points[tet[0], 1], meshio_mesh.points[tet[0], 2])
+    ax.scatter(meshio_mesh.points[tet[1], 0], meshio_mesh.points[tet[1], 1], meshio_mesh.points[tet[1], 2])
+    ax.scatter(meshio_mesh.points[tet[2], 0], meshio_mesh.points[tet[2], 1], meshio_mesh.points[tet[2], 2])
+    ax.scatter(meshio_mesh.points[tet[3], 0], meshio_mesh.points[tet[3], 1], meshio_mesh.points[tet[3], 2])
+
+
+
+# x, y, z = mesh_var[1][0::3], mesh_var[1][1::3], mesh_var[1][2::3]
+# fig = plt.figure()
+# ax = fig.add_subplot(projection='3d')
+# ax.scatter(x,y,z)
+# ax.axis('equal')
+plt.show()
