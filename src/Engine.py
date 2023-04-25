@@ -1,11 +1,11 @@
 import numpy as np
-from sympy import symbols
-import pandas as pd
-import matplotlib.pyplot as plt
+import math
+import sympy as sym
 
 
 class MaterialProperties():
     def __init__(self, YoungsModulus, PoissonsRatio):
+        # defines D matrix given material properties for an isotropic material 
         Eps = YoungsModulus
         Mu = PoissonsRatio
         E11 = Eps*(1-Mu)/((1+Mu)*(1-2*Mu))
@@ -19,36 +19,89 @@ class MaterialProperties():
                            [0, 0, 0, 0, 0, E44]])
 
 
-class BasisFn():
-    def __init__(self, ElementType):
-        r, s, t = symbols('r s t')
-        if ElementType.lower() == "brick":
+class Kelm():
+    def __init__(self, ElementType, GlobalMesh):
+        r, s, t = sym.symbols('r s t')
+        gm = GlobalMesh
+        numnode = np.size(gm)/3 # Calcs number of nodes from 3D global mesh
+        gaussint = np.array([(-1*math.sqrt(3/5)), 0, math.sqrt(3/5)]) # 3 point Gauss integration
+        gaussweight = np.array([5/9, 8/9, 5/9]) # 3 point Gauss integration
+        self.bs = np.zeros((6,numnode*3))
+        if ElementType.lower() == "brick": # Shape functions for brick elements
             # Parent element labeled per notes
-            n1 = 0.125*(1-r)*(1-s)*(1-t)
-            n2 = 0.125*(1+r)*(1-s)*(1-t)
-            n3 = 0.125*(1+r)*(1+s)*(1-t)
-            n4 = 0.125*(1-r)*(1+s)*(1-t)
-            n5 = 0.125*(1-r)*(1-s)*(1+t)
-            n6 = 0.125*(1+r)*(1-s)*(1+t)
-            n7 = 0.125*(1+r)*(1+s)*(1+t)
-            n8 = 0.125*(1-r)*(1+s)*(1+t)
+            n1 = sym.exp(0.125*(1-r)*(1-s)*(1-t))
+            n2 = sym.exp(0.125*(1+r)*(1-s)*(1-t))
+            n3 = sym.exp(0.125*(1+r)*(1+s)*(1-t))
+            n4 = sym.exp(0.125*(1-r)*(1+s)*(1-t))
+            n5 = sym.exp(0.125*(1-r)*(1-s)*(1+t))
+            n6 = sym.exp(0.125*(1+r)*(1-s)*(1+t))
+            n7 = sym.exp(0.125*(1+r)*(1+s)*(1+t))
+            n8 = sym.exp(0.125*(1-r)*(1+s)*(1+t))
             self.N = np.array([n1, n2, n3, n4, n5, n6, n7, n8])
-        elif ElementType.lower() == "tet":
+            self.R = 0.125*np.array([[-1*(1-s)*(1-t), (1-s)*(1-t), (1+s)*(1-t), -(1+s)*(1-t), 
+                                      -(1-s)*(1+t), (1-s)*(1+t), (1+s)*(1+t), -(1+s)*(1+t)],
+                                     [-(1-r)*(1-t), -(1+r)*(1-t), (1+r)*(1-t), (1-r)*(1-t),
+                                      -(1-r)*(1+t), -(1+r)*(1+t), (1+r)*(1+t), (1-r)*(1+t)],
+                                     [-(1-r)*(1-s), -(1+r)*(1-s), -(1+r)*(1+s), -(1-r)*(1+s),
+                                      (1-r)*(1-s), (1+r)*(1-s), (1+r)*(1+s), (1-r)*(1+s)]])
+        elif ElementType.lower() == "tet": # Shape functions for tet elements
             # Parent element labeled per notes
-            n1 = r
-            n2 = s
-            n3 = t
-            n4 = 1-r-s-t
+            n1 = sym.exp(r)
+            n2 = sym.exp(s)
+            n3 = sym.exp(t)
+            n4 = sym.exp(1-r-s-t)
             self.N = np.array([n1, n2, n3, n4])
+            self.R = np.array([[1, 0, 0, -1],
+                          [0, 1, 0, -1],
+                          [0, 0, 1, -1]])
         else:
             print("Invalid Element type")
             exit()
+        self.bs = np.empty((0,0))
+        if ElementType.lower() == "brick":
+            for i in range(3):
+                rr = gaussint[i]
+                for j in range(3):
+                    ss = gaussint[j]
+                    for k in range(3):
+                        tt = gaussint[k]
+                        self.Jac = np.matmul(self.R,gm)
+                        dN = np.matmul(np.linalg.inv(self.Jac),self.R)
+                        for ii in range(8):
+                            icol = 3*ii
+                            self.bs[0:6,icol:icol+3] = np.array([[dN[0][ii], 0, 0],
+                                                                [0, dN[1][ii], 0],
+                                                                [0, 0, dN[2][ii]],
+                                                                [0, dN[2][ii], dN[1][ii]],
+                                                                [dN[2][ii], 0, dN[0][ii]],
+                                                                [dN[1][ii], dN[0][ii], 0]])
+        else:
+            self.Jac = np.matmul(self.R,gm)
+            dN = np.matmul(np.linalg.inv(self.Jac),self.R)
+            for ii in range(4):
+                icol = 3*ii
+                self.bs[0:6,icol:icol+3] = np.array([[dN[0][ii], 0, 0],
+                                [0, dN[1][ii], 0],
+                                [0, 0, dN[2][ii]],
+                                [0, dN[2][ii], dN[1][ii]],
+                                [dN[2][ii], 0, dN[0][ii]],
+                                [dN[1][ii], dN[0][ii], 0]])
 
 
+
+
+        
+        
+        
 if __name__ == '__main__':
-    # Example material: Stainless steel in metric
-    # https://www.matweb.com/search/DataSheet.aspx?MatGUID=71396e57ff5940b791ece120e4d563e0&ckck=1
-    #
+# Example material: Stainless steel in metric
+# https://www.matweb.com/search/DataSheet.aspx?MatGUID=71396e57ff5940b791ece120e4d563e0&ckck=1
+#
     in1 = MaterialProperties(196*10**11, 0.282)
-    in2 = BasisFn('brick')
-    print(in1.D); print(in2.N)
+    elmesh1 = np.array([[0, 0, 0], # Single tet 
+                         [1, 0, 0],
+                         [0, 1, 0],
+                         [0, 0, 1]])
+    in2 = Kelm('tet', elmesh1)
+
+    print(in2.bs)
