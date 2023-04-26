@@ -16,8 +16,7 @@ Gmsh Python API: https://gitlab.onelab.info/gmsh/gmsh/blob/gmsh_4_11_1/api/gmsh.
 
 ### gmsh Python API
 
-See colton2.py
-
+Inside of your virtual environment, run `pip install gmsh mshio` or install requirements.txt file
 
 ### gmsh GUI, not recommended to use
 1. Open .stp file

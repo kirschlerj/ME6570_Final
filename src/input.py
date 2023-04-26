@@ -187,9 +187,10 @@ def animate_mesh(nodes, tets):
     graph = ax.scatter(data.x, data.y, data.z)
 
     def update_graph(num):
-        data=df[df['node']<=num]
+        num2 = 3*num
+        data=df[df['node']<=num2]
         graph._offsets3d = (data.x, data.y, data.z)
-        title.set_text('3D Test, # nodes={}'.format(num))
+        title.set_text('3D Test, # nodes={}'.format(num2))
 
     ani = FuncAnimation(fig, update_graph, frames=len(nodes), 
                         interval=1, blit=False)
