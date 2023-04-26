@@ -20,13 +20,13 @@ class MaterialProperties():
 
 
 class Kelm():
-    def __init__(self, ElementType, GlobalMesh):
+    def __init__(self, ElementType, GlobalMesh, DMatrix):
         r, s, t = sym.symbols('r s t')
         gm = GlobalMesh
         numnode = np.size(gm)/3 # Calcs number of nodes from 3D global mesh
         gaussint = np.array([(-1*math.sqrt(3/5)), 0, math.sqrt(3/5)]) # 3 point Gauss integration
         gaussweight = np.array([5/9, 8/9, 5/9]) # 3 point Gauss integration
-        self.bs = np.zeros((6,numnode*3))
+        self.bs = np.zeros((6, int(numnode*3)))
         if ElementType.lower() == "brick": # Shape functions for brick elements
             # Parent element labeled per notes
             n1 = sym.exp(0.125*(1-r)*(1-s)*(1-t))
@@ -44,21 +44,6 @@ class Kelm():
                                       -(1-r)*(1+t), -(1+r)*(1+t), (1+r)*(1+t), (1-r)*(1+t)],
                                      [-(1-r)*(1-s), -(1+r)*(1-s), -(1+r)*(1+s), -(1-r)*(1+s),
                                       (1-r)*(1-s), (1+r)*(1-s), (1+r)*(1+s), (1-r)*(1+s)]])
-        elif ElementType.lower() == "tet": # Shape functions for tet elements
-            # Parent element labeled per notes
-            n1 = sym.exp(r)
-            n2 = sym.exp(s)
-            n3 = sym.exp(t)
-            n4 = sym.exp(1-r-s-t)
-            self.N = np.array([n1, n2, n3, n4])
-            self.R = np.array([[1, 0, 0, -1],
-                          [0, 1, 0, -1],
-                          [0, 0, 1, -1]])
-        else:
-            print("Invalid Element type")
-            exit()
-        self.bs = np.empty((0,0))
-        if ElementType.lower() == "brick":
             for i in range(3):
                 rr = gaussint[i]
                 for j in range(3):
@@ -75,23 +60,32 @@ class Kelm():
                                                                 [0, dN[2][ii], dN[1][ii]],
                                                                 [dN[2][ii], 0, dN[0][ii]],
                                                                 [dN[1][ii], dN[0][ii], 0]])
-        else:
+        elif ElementType.lower() == "tet": # Shape functions for tet elements
+            # Parent element labeled per notes
+            n1 = sym.exp(r)
+            n2 = sym.exp(s)
+            n3 = sym.exp(t)
+            n4 = sym.exp(1-r-s-t)
+            self.N = np.array([n1, n2, n3, n4])
+            self.R = np.array([[1, 0, 0, -1],
+                          [0, 1, 0, -1],
+                          [0, 0, 1, -1]])
             self.Jac = np.matmul(self.R,gm)
             dN = np.matmul(np.linalg.inv(self.Jac),self.R)
             for ii in range(4):
                 icol = 3*ii
-                self.bs[0:6,icol:icol+3] = np.array([[dN[0][ii], 0, 0],
-                                [0, dN[1][ii], 0],
-                                [0, 0, dN[2][ii]],
-                                [0, dN[2][ii], dN[1][ii]],
-                                [dN[2][ii], 0, dN[0][ii]],
-                                [dN[1][ii], dN[0][ii], 0]])
+                self.bs[0:6,icol:icol+3] = np.array([[dN[0,ii], 0, 0],
+                                [0, dN[1,ii], 0],
+                                [0, 0, dN[2,ii]],
+                                [0, dN[2,ii], dN[1,ii]],
+                                [dN[2,ii], 0, dN[0,ii]],
+                                [dN[1,ii], dN[0,ii], 0]])
+            self.K = np.linalg.multi_dot([self.bs.transpose(), DMatrix, self.bs, np.linalg.det(self.Jac)])
+        else:
+            print("Invalid Element type")
+            exit()
 
-
-
-
-        
-        
+                    
         
 if __name__ == '__main__':
 # Example material: Stainless steel in metric
@@ -102,6 +96,6 @@ if __name__ == '__main__':
                          [1, 0, 0],
                          [0, 1, 0],
                          [0, 0, 1]])
-    in2 = Kelm('tet', elmesh1)
+    in2 = Kelm('tet', elmesh1, in1.D)
 
-    print(in2.bs)
+    print(in2.K)
