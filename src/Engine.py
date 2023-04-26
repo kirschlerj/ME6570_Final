@@ -1,3 +1,8 @@
+"""
+Engine for the main. Use FEM to approximate stress/strain in the solid.
+"""
+
+
 import numpy as np
 import math
 import sympy as sym

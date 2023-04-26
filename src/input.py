@@ -3,7 +3,7 @@ Use gmsh API to get all mesh variables directly into python
 
 Adapted from gmsh documentation example: https://gmsh.info/doc/texinfo/gmsh.html#t20
 
-Gmsh Python API: https://gitlab.onelab.info/gmsh/gmsh/blob/gmsh_4_11_1/api/gmsh.py#L4997
+Gmsh Python API: https://gitlab.onelab.info/gmsh/gmsh/blob/gmsh_4_11_1/api/gmsh.py
 """
 
 import numpy as np
