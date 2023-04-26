@@ -28,13 +28,17 @@ Inside of your virtual environment, run `pip install gmsh mshio` or install requ
 ## TODO
 
 - Input
+    - Colton
 - Engine
+    - Jack
 - Output
     - Dan
 - Problem statement stuff
 - Comparison
-- User manual
+    - Cam?
+- User manual in README
+    - Colton
 - Flowchart
     - High level broad
     - Engine flowchart, more details
-- 
+    - Put in README i suppose
