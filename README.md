@@ -8,24 +8,44 @@ Final Project for John Cotton's ME6570
 - Jack Kirschler: Mathematician
 - Colton Wright: Generalist
 
-## gmsh
+## Setup
 
-Install gmsh from this website: https://gmsh.info/#Download
+All you need to do to run this code is execute the following command inside of a python virtual environment:
 
-Gmsh Python API: https://gitlab.onelab.info/gmsh/gmsh/blob/gmsh_4_11_1/api/gmsh.py#L4997
+    pip install -r requirements.txt
 
-### gmsh Python API
+The python libraries used in this project are given below:
 
-Inside of your virtual environment, run `pip install gmsh mshio` or install requirements.txt file
+- NumPy: https://numpy.org/
+- SciPy: https://www.scipy.org/
+- matplotlib: https://matplotlib.org/
+- Gmsh: https://gmsh.info/doc/texinfo/gmsh.html
+    - Python API: https://gitlab.onelab.info/gmsh/gmsh/blob/gmsh_4_11_1/api/gmsh.py
+- meshio: https://github.com/nschloe/meshio
 
-### gmsh GUI, not recommended to use
+### Optional: gmsh GUI, not required
+
+Optional: Install gmsh GUI from this [website](https://gmsh.info/#Download)
+
 1. Open .stp file
 2. Geometry > Add > Volume
 3. Select entire volume
 4. Mesh > Define > 3D
 5. Export as Abaqus INP (*.inp) so it can work with our python scripts
 
-## TODO
+## User Manual
+
+Once your virtual environment is set up, run `main.py` and pass a .stl file into the program by including it as an argument after the name of the script. An example is shown below:
+
+    (.venv) PS C:\Users\Colton W\Documents\GitHub\ME6570_Final> & "c:/Users/Colton W/Documents/GitHub/ME6570_Final/.venv/Scripts/python.exe" "c:/Users/Colton W/Documents/GitHub/ME6570_Final/src/main.py" "C:\Users\Colton W\Documents\GitHub\ME6570_Final\data\t20_data.step"
+
+This follows a general format we use to pass arguments to scripts all the time:
+
+    python script.py data.cvs
+
+After this, `main.py` will call functions in `input.py` to generate a mesh of tets and return the variables into `main.py`. TODO: add info on force & BC's. After these steps are taken, the engine is called to solve for stress and strain. The data is then saved and plotted for analysis.
+
+# TODO
 
 - Input
     - Colton
@@ -41,4 +61,4 @@ Inside of your virtual environment, run `pip install gmsh mshio` or install requ
 - Flowchart
     - High level broad
     - Engine flowchart, more details
-    - Put in README i suppose
+    - Put in README I suppose
