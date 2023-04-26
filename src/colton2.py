@@ -139,6 +139,80 @@ def main():
 
     nodes = meshio_mesh.points
     tets = meshio_mesh.cells_dict["tetra"]
+    print(tets[1])
+
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    ax.set_xlim(xmax=np.max(nodes[:, 0]), xmin=np.min(nodes[:, 0]))
+    ax.set_ylim(ymax=np.max(nodes[:, 1]), ymin=np.min(nodes[:, 1]))
+    ax.set_zlim(zmax=np.max(nodes[:, 2]), zmin=np.min(nodes[:, 2]))
+    title = ax.set_title('3D Test')
+    graph = ax.scatter(0, 0 ,0)
+    # ani = FuncAnimation(fig, update_graph, fargs=(nodes, tets, title, graph), frames=19, 
+                        # interval=40, blit=False)
+
+
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    from mpl_toolkits.mplot3d.art3d import Poly3DCollection
+    # create Poly3DCollection object for tetrahedra
+    tets_collection = Poly3DCollection([nodes[tetrahedron] for tetrahedron in tets], facecolor='cyan', alpha=0.5, edgecolor='k')
+
+    # add Poly3DCollection to the plot
+    ax.add_collection(tets_collection)
+
+    # set axis limits based on min and max coordinates of nodes
+    ax.set_xlim([nodes[:,0].min(), nodes[:,0].max()])
+    ax.set_ylim([nodes[:,1].min(), nodes[:,1].max()])
+    ax.set_zlim([nodes[:,2].min(), nodes[:,2].max()])
+
+    # add labels and title
+    ax.set_xlabel('X Label')
+    ax.set_ylabel('Y Label')
+    ax.set_zlabel('Z Label')
+    ax.set_title('Tetrahedra Plot')
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+
+    # set axis limits based on min and max coordinates of nodes
+    ax.set_xlim([nodes[:,0].min(), nodes[:,0].max()])
+    ax.set_ylim([nodes[:,1].min(), nodes[:,1].max()])
+    ax.set_zlim([nodes[:,2].min(), nodes[:,2].max()])
+
+    # add labels and title
+    ax.set_xlabel('X Label')
+    ax.set_ylabel('Y Label')
+    ax.set_zlabel('Z Label')
+    ax.set_title('Tetrahedra Plot')
+
+    # create empty Poly3DCollection object for tetrahedra
+    tets_collection = Poly3DCollection([], facecolor='cyan', alpha=0.5, edgecolor='k')
+
+    # add Poly3DCollection to the plot
+    ax.add_collection(tets_collection)
+
+    # function to update plot with each frame
+    def update(frame):
+        # add one more tetrahedron to the Poly3DCollection
+        tetrahedron = tets[frame]
+        tets_collection.set_verts([*tets_collection.get_verts(), nodes[tetrahedron]])
+        # return the updated Poly3DCollection
+        return tets_collection,
+
+    # create animation using FuncAnimation
+    ani = FuncAnimation(fig, update, frames=len(tets), interval=200, blit=True)
+
+    # show animation
+
+    plt.show()
+
+def update_graph(num, nodes, tets, title, graph):
+    tet_nodes = tets[num]
+    print(tet_nodes)
+    x, y, z = nodes[tet_nodes[0], 0], nodes[tet_nodes[0], 1], nodes[tet_nodes[0], 2]
+    print("(x, y, z)", x,y,z)
+    graph._offsets3d = (x, y, z)
+    title.set_text('3D Test, time={}'.format(num))
 
 
 if __name__ == '__main__':
