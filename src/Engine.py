@@ -80,7 +80,7 @@ class Kelm():
                                 [0, dN[2,ii], dN[1,ii]],
                                 [dN[2,ii], 0, dN[0,ii]],
                                 [dN[1,ii], dN[0,ii], 0]])
-            self.K = np.linalg.multi_dot([self.bs.transpose(), DMatrix, self.bs, np.linalg.det(self.Jac)])
+            self.K = np.matmul(np.matmul(self.bs.transpose(), DMatrix), self.bs)*np.linalg.det(self.Jac)
         else:
             print("Invalid Element type")
             exit()
