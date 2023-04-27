@@ -3,7 +3,7 @@ Use gmsh API to get all mesh variables directly into python
 
 Adapted from gmsh documentation example: https://gmsh.info/doc/texinfo/gmsh.html#t20
 
-Gmsh Python API: https://gitlab.onelab.info/gmsh/gmsh/blob/gmsh_4_11_1/api/gmsh.py#L4997
+Gmsh Python API: https://gitlab.onelab.info/gmsh/gmsh/blob/gmsh_4_11_1/api/gmsh.py
 """
 
 import numpy as np
@@ -19,7 +19,7 @@ def main():
     stp_path = os.path.join(os.getcwd(), "data", "t20_data.step")
     nodes, tets = stp_to_mesh(stp_path, False)
     plot_mesh(nodes, tets)
-    animate_mesh(nodes, tets)
+    animate_mesh(nodes, tets, False)
 
 
 def stp_to_mesh(path_to_stp, show_gui):
@@ -161,9 +161,9 @@ def plot_mesh(nodes, tets):
     ax.set_ylabel('Y')
     ax.set_zlabel('Z')
     ax.set_title('Tetrahedra Plot')
+    plt.show()
 
-
-def animate_mesh(nodes, tets):
+def animate_mesh(nodes, tets, return_ani):
 
     import pandas as pd
     from matplotlib.animation import FuncAnimation
@@ -194,9 +194,11 @@ def animate_mesh(nodes, tets):
 
     ani = FuncAnimation(fig, update_graph, frames=len(nodes), 
                         interval=1, blit=False)
-
-    plt.show()
-
+    
+    if return_ani:
+        return ani
+    else:
+        plt.show()
 
 def update_graph(num, nodes, tets, title, graph):
     tet_nodes = tets[num]

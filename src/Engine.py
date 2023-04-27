@@ -1,3 +1,8 @@
+"""
+Engine for the main. Use FEM to approximate stress/strain in the solid.
+"""
+
+
 import numpy as np
 import math
 import sympy as sym
@@ -85,8 +90,14 @@ class Kelm():
             print("Invalid Element type")
             exit()
 
-                    
-        
+class Engine():
+    def __init__(self, nodes, tets):
+        print("Initialize engine...")
+
+    def solve(self):
+        print("Solving...")
+
+
 if __name__ == '__main__':
 # Example material: Stainless steel in metric
 # https://www.matweb.com/search/DataSheet.aspx?MatGUID=71396e57ff5940b791ece120e4d563e0&ckck=1
