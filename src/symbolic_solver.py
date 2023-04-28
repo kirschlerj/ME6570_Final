@@ -8,7 +8,9 @@ import numpy as np
 import sympy as sym
 
 
-
+s = sym.Symbol('s')
+r = sym.Symbol('r')
+t = sym.Symbol('t')
 
 n1 = sym.exp(0.125*(1-r)*(1-s)*(1-t))
 n2 = sym.exp(0.125*(1+r)*(1-s)*(1-t))
