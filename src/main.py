@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import sys
 
 import input
-from Engine import Engine
+from engine import Engine
 
 full_path_to_stp = str(sys.argv[1])
 
