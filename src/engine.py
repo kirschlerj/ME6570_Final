@@ -74,7 +74,7 @@ class Engine():
 
         gaussint = np.array([(-1*np.sqrt(3/5)), 0, np.sqrt(3/5)]) # 3 point Gauss integration
         gaussweight = np.array([5/9, 8/9, 5/9]) # 3 point Gauss integration
-        Bs = np.zeros((6, 12)) # TODO: This is only goind to work for tets
+        Bs = np.zeros((6, 12)) # TODO: This is only going to work for tets
         R = self.get_R(element_index)
         Jac = np.matmul(R,gm)
         dN = np.matmul(np.linalg.inv(Jac), R)
@@ -87,8 +87,8 @@ class Engine():
                             [dN[2,ii], 0, dN[0,ii]],
                             [dN[1,ii], dN[0,ii], 0]])
             print(Bs)
-        self.K = np.matmul(np.matmul(self.bs.transpose(), DMatrix), self.bs)*np.linalg.det(self.Jac)
-
+        Kelm = np.matmul(np.matmul(Bs.transpose(), self.D), Bs)*np.linalg.det(Jac)
+        return Kelm
 
     def get_R(self, element_index):
         # TODO: If we ever move up to bricks & tets in the same mesh, this needs some more work.
