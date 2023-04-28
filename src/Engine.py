@@ -5,7 +5,6 @@ Engine for the main. Use FEM to approximate stress/strain in the solid.
 
 import numpy as np
 import math
-import sympy as sym
 
 
 class MaterialProperties():
@@ -26,7 +25,6 @@ class MaterialProperties():
 
 class Kelm():
     def __init__(self, ElementType, GlobalMesh, DMatrix):
-        r, s, t = sym.symbols('r s t')
         gm = GlobalMesh
         numnode = np.size(gm)/3 # Calcs number of nodes from 3D global mesh
         gaussint = np.array([(-1*math.sqrt(3/5)), 0, math.sqrt(3/5)]) # 3 point Gauss integration
@@ -34,27 +32,18 @@ class Kelm():
         self.bs = np.zeros((6, int(numnode*3)))
         if ElementType.lower() == "brick": # Shape functions for brick elements
             # Parent element labeled per notes
-            n1 = sym.exp(0.125*(1-r)*(1-s)*(1-t))
-            n2 = sym.exp(0.125*(1+r)*(1-s)*(1-t))
-            n3 = sym.exp(0.125*(1+r)*(1+s)*(1-t))
-            n4 = sym.exp(0.125*(1-r)*(1+s)*(1-t))
-            n5 = sym.exp(0.125*(1-r)*(1-s)*(1+t))
-            n6 = sym.exp(0.125*(1+r)*(1-s)*(1+t))
-            n7 = sym.exp(0.125*(1+r)*(1+s)*(1+t))
-            n8 = sym.exp(0.125*(1-r)*(1+s)*(1+t))
-            self.N = np.array([n1, n2, n3, n4, n5, n6, n7, n8])
-            self.R = 0.125*np.array([[-1*(1-s)*(1-t), (1-s)*(1-t), (1+s)*(1-t), -(1+s)*(1-t), 
-                                      -(1-s)*(1+t), (1-s)*(1+t), (1+s)*(1+t), -(1+s)*(1+t)],
-                                     [-(1-r)*(1-t), -(1+r)*(1-t), (1+r)*(1-t), (1-r)*(1-t),
-                                      -(1-r)*(1+t), -(1+r)*(1+t), (1+r)*(1+t), (1-r)*(1+t)],
-                                     [-(1-r)*(1-s), -(1+r)*(1-s), -(1+r)*(1+s), -(1-r)*(1+s),
-                                      (1-r)*(1-s), (1+r)*(1-s), (1+r)*(1+s), (1-r)*(1+s)]])
             for i in range(3):
-                rr = gaussint[i]
+                r = gaussint[i]
                 for j in range(3):
-                    ss = gaussint[j]
+                    s = gaussint[j]
                     for k in range(3):
-                        tt = gaussint[k]
+                        t = gaussint[k]
+                        self.R = 0.125*np.array([[-1*(1-s)*(1-t), (1-s)*(1-t), (1+s)*(1-t), -(1+s)*(1-t), 
+                                                -(1-s)*(1+t), (1-s)*(1+t), (1+s)*(1+t), -(1+s)*(1+t)],
+                                                [-(1-r)*(1-t), -(1+r)*(1-t), (1+r)*(1-t), (1-r)*(1-t),
+                                                -(1-r)*(1+t), -(1+r)*(1+t), (1+r)*(1+t), (1-r)*(1+t)],
+                                                [-(1-r)*(1-s), -(1+r)*(1-s), -(1+r)*(1+s), -(1-r)*(1+s),
+                                                (1-r)*(1-s), (1+r)*(1-s), (1+r)*(1+s), (1-r)*(1+s)]])
                         self.Jac = np.matmul(self.R,gm)
                         dN = np.matmul(np.linalg.inv(self.Jac),self.R)
                         for ii in range(8):
@@ -66,12 +55,7 @@ class Kelm():
                                                                 [dN[2][ii], 0, dN[0][ii]],
                                                                 [dN[1][ii], dN[0][ii], 0]])
         elif ElementType.lower() == "tet": # Shape functions for tet elements
-            # Parent element labeled per notes
-            n1 = sym.exp(r)
-            n2 = sym.exp(s)
-            n3 = sym.exp(t)
-            n4 = sym.exp(1-r-s-t)
-            self.N = np.array([n1, n2, n3, n4])
+            # Parent element labeled per notesw
             self.R = np.array([[1, 0, 0, -1],
                           [0, 1, 0, -1],
                           [0, 0, 1, -1]])
@@ -90,6 +74,19 @@ class Kelm():
             print("Invalid Element type")
             exit()
 
+
+class Load():
+    def __init__(self, NBCs, EBCs, GlobalMesh):
+        gm = GlobalMesh
+        numnode = np.size(gm)/3 # Calcs number of nodes from 3D global mesh
+        self.F = np.zeros((int(numnode*3),1))
+        cartdict = {'x':1, 'y':2, 'z':3}
+        for NB in range(int(np.size(NBCs)/3)-1):
+            ii = (NBCs[NB,0]+cartdict[NBCs[NB,1]]-2)
+            self.F[ii] = NBCs[NB,2]
+
+
+
 class Engine():
     def __init__(self, nodes, tets):
         print("Initialize engine...")
@@ -107,6 +104,9 @@ if __name__ == '__main__':
                          [1, 0, 0],
                          [0, 1, 0],
                          [0, 0, 1]])
+    NBC = np.array([[1, 'x', 5],[2, 'y', 7]])
+    EBC = np.array([0, 0])
     in2 = Kelm('tet', elmesh1, in1.D)
-
-    print(in2.K)
+    in3 = Load(NBC, EBC, elmesh1)
+    print(in3.F)
+    print(range(0))
