@@ -7,7 +7,7 @@ import numpy as np
 
 
 class Load():
-    def __init__(self, NBCs, EBCs, GlobalMesh):
+    def __init__(self, NBCs, GlobalMesh):
         gm = GlobalMesh
         numnode = np.size(gm)/3 # Calcs number of nodes from 3D global mesh
         self.F = np.zeros((int(numnode*3),1))
@@ -109,7 +109,7 @@ def main():
                             [0, 0, 1]])
         NBC = np.array([[1, 'x', 5],[2, 'y', 7]])
         EBC = np.array([[3, 'z'], [4, 'z']])
-        in2 = Load(NBC, EBC, elmesh1)
+        in2 = Load(NBC, elmesh1)
 
         Eps = 196*10**11
         Mu = 0.282
@@ -140,8 +140,14 @@ def main():
                             [dN[2,ii], 0, dN[0,ii]],
                             [dN[1,ii], dN[0,ii], 0]])
         K = np.matmul(np.matmul(bs.transpose(), D), bs)*np.linalg.det(Jac)
-        #Answers = np.linalg.solve(K,in2.F)
-        print('hi')
+        cartdict = {'x':0, 'y':1, 'z':2}
+        for eb in range(int(np.size(EBC)/2)):
+            ii = (int(EBC[eb][0])-1)*3 + cartdict[EBC[eb][1].lower()]
+            K[ii,:] = 0
+            K[:,ii] = 0
+            K[ii,ii] = 1
+        print(K)
+        Answers = np.linalg.solve(K,in2.F)
 
 def main2():
     pass
