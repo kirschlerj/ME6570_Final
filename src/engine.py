@@ -21,6 +21,17 @@ class Engine():
     def __init__(self, nodes, tets, ElementType, GlobalMesh, DMatrix, YoungsModulus, PoissonsRatio):
         print("Initialize engine...")
         self.init_material_properties()
+        self.nodes = nodes # Node positions
+        self.tets = tets # The iconn, nodal tag of each element
+        self.num_nodes = np.shape(self.nodes)[0] # Get number of nodes in the mesh
+        self.num_elements = np.shape(self.tets)[0] # Get number of elements in the mesh
+        if self.num_elements != (self.num_nodes*4):
+            print("WARNING: Tets and elements don't line up!")
+
+        self.K_global = np.zeros((self.num_nodes, self.num_nodes))
+
+
+
 
     def solve(self):
         print("Solving...")
@@ -107,7 +118,9 @@ if __name__ == '__main__':
 # Example material: Stainless steel in metric
 # https://www.matweb.com/search/DataSheet.aspx?MatGUID=71396e57ff5940b791ece120e4d563e0&ckck=1
 #
-    in1 = MaterialProperties(196*10**11, 0.282)
+
+    engine = Engine()
+    in1 = engine.MaterialProperties(196*10**11, 0.282)
     elmesh1 = np.array([[0, 0, 0], # Single tet 
                          [1, 0, 0],
                          [0, 1, 0],
