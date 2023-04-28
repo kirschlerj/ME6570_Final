@@ -110,3 +110,5 @@ if __name__ == '__main__':
     in2 = Kelm('tet', elmesh1, in1.D)
 
     print(in2.K)
+
+    print("HI")
