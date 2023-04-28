@@ -132,8 +132,8 @@ def main():
                             [1, 0, 0],
                             [0, 1, 0],
                             [0, 0, 1]])
-        NBC = np.array([[1, 'x', 5000],[2, 'y', 7000]])
-        EBC = np.array([[3, 'z'], [4, 'z']])
+        NBC = np.array([[4, 'z', 5000], [4, 'y', 0]])
+        EBC = np.array([[1, 'z'], [1, 'x'], [1, 'y'], [2, 'z'], [2, 'x'], [2, 'y'], [3, 'z'], [3, 'x'], [3, 'y']])
         in2 = Load(NBC, elmesh1)
 
         Eps = 196*10**11
@@ -171,9 +171,8 @@ def main():
             K[ii,:] = 0
             K[:,ii] = 0
             K[ii,ii] = 1
-        print(K)
-        print(in2.F)
         Answers = np.linalg.solve(K,in2.F)
+        print(Answers)
 
 def main2():
     import input
