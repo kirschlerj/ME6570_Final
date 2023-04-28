@@ -63,8 +63,8 @@ class Load():
         numnode = np.size(gm)/3 # Calcs number of nodes from 3D global mesh
         self.F = np.zeros((int(numnode*3),1))
         cartdict = {'x':1, 'y':2, 'z':3}
-        for NB in range(int(np.size(NBCs)/3)-1):
-            ii = (NBCs[NB,0]+cartdict[NBCs[NB,1]]-2)
+        for NB in range(int(np.size(NBCs)/3)):
+            ii = int(NBCs[NB][0]) + cartdict[NBCs[NB][1]]-2
             self.F[ii] = NBCs[NB,2]
 
 
@@ -168,7 +168,5 @@ if __name__ == '__main__':
     EBC = np.array([0, 0])
     in2 = Kelm('tet', elmesh1, in1.D)
     in3 = Load(NBC, EBC, elmesh1)
-    print(in3.F)
-    print(range(0))
+    print(in2.K)
 
-    print("HI")
