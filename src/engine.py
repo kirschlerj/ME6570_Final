@@ -183,10 +183,9 @@ def main2():
 
     engine = Engine(nodes, tets, YoungsModulus=196*10**11, PoissonsRatio=0.282)
     engine.solve()
-    engine = Engine()
 
 
 if __name__ == '__main__':
-     main()
-    #main2()
+    #  main()
+    main2()
 
