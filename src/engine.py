@@ -5,8 +5,8 @@ Engine for the main. Use FEM to approximate stress/strain in the solid.
 
 import numpy as np
 import sys
-np.set_printoptions(precision=3
-                    ,linewidth=sys.maxsize)
+import os
+np.set_printoptions(precision=0,linewidth=sys.maxsize)
 
 
 class Load():
@@ -23,7 +23,7 @@ class Load():
 
 class Engine():
     # (self, nodes, tets, bricks=-1, ElementType, GlobalMesh, DMatrix, YoungsModulus, PoissonsRatio):
-    def __init__(self, nodes, tets, YoungsModulus, PoissonsRatio, bricks=-1):
+    def __init__(self, nodes, tets, NBCs, EBCs, YoungsModulus, PoissonsRatio, bricks=-1):
         print("Initialize engine...")
         self.init_material_properties(YoungsModulus, PoissonsRatio)
         self.nodes = nodes # Node positions
@@ -33,15 +33,21 @@ class Engine():
         self.num_elements = np.shape(self.tets)[0] # Get number of elements in the mesh
         # self.R = self.get_R() # Needs work if we do bricks
 
+        self.NBCs = NBCs
+        self.EBCs = EBCs
+
         self.K_global = np.zeros((self.num_nodes, self.num_nodes))
-        self.F = np.zeros(self.num_nodes)
+        self.F = np.zeros(self.num_nodes*3)
 
 
     def solve(self):
         print("Solving...")
 
-        for i in range(self.num_elements):
-            Kelm = self.get_Kelm(i)
+        
+        self.K = self.get_K_global()
+        self.F = self.get_load_vector()
+        self.apply_BCs()
+        self.d = np.linalg.solve(self.K, self.F)
 
 
     def get_Kelm(self, element_index):
@@ -67,10 +73,8 @@ class Engine():
                        [node1x, node1y, node1z],
                        [node2x, node2y, node2z],
                        [node3x, node3y, node3z]])
-        
-        print("self.tets[element_index]", self.tets[element_index])
-        print("node0x", node0x)
-        print("gm", gm)
+
+        # print("gm:\n", gm, "\n")
 
         gaussint = np.array([(-1*np.sqrt(3/5)), 0, np.sqrt(3/5)]) # 3 point Gauss integration
         gaussweight = np.array([5/9, 8/9, 5/9]) # 3 point Gauss integration
@@ -81,14 +85,44 @@ class Engine():
         for ii in range(4):
             icol = 3*ii
             Bs[0:6,icol:icol+3] = np.array([[dN[0,ii], 0, 0],
-                            [0, dN[1,ii], 0],
-                            [0, 0, dN[2,ii]],
-                            [0, dN[2,ii], dN[1,ii]],
-                            [dN[2,ii], 0, dN[0,ii]],
-                            [dN[1,ii], dN[0,ii], 0]])
-            print(Bs)
+                                            [0, dN[1,ii], 0],
+                                            [0, 0, dN[2,ii]],
+                                            [0, dN[2,ii], dN[1,ii]],
+                                            [dN[2,ii], 0, dN[0,ii]],
+                                            [dN[1,ii], dN[0,ii], 0]])
+
         Kelm = np.matmul(np.matmul(Bs.transpose(), self.D), Bs)*np.linalg.det(Jac)
         return Kelm
+
+    def get_K_global(self):
+
+        K = np.zeros((self.num_nodes*6, self.num_nodes*6))
+
+        for i in range(self.num_elements):
+            Kelm = self.get_Kelm(i)
+            element_nodes = self.tets[i]
+            # print("Kelm:\n", Kelm, "\n")
+            for j in range(4):
+                    for k in range(3):
+                        global_dof_jk = element_nodes[j]*6 + k
+                        for m in range(4):
+                            for n in range(3):
+                                global_dof_mn = element_nodes[m]*6 + n
+                                K[global_dof_jk, global_dof_mn] += Kelm[j*3+k, m*3+n]
+                                os.system('cls' if os.name == 'nt' else 'clear')
+                                print("K:\n", K)
+                                input("Enter to continue...")
+                                # os.system('cls' if os.name == 'nt' else 'clear')
+
+
+
+    def get_load_vector(self):
+
+        for condition in self.NBCs:
+            print(condition)
+
+    def apply_BCs(self):
+        pass
 
     def get_R(self, element_index):
         # TODO: If we ever move up to bricks & tets in the same mesh, this needs some more work.
@@ -176,15 +210,43 @@ def main():
 
 def main2():
     import input
-    full_path_to_stp = r"C:\Users\Colton W\Documents\GitHub\ME6570_Final\data\t20_data.step"
+    # full_path_to_stp = r"data\t20_data.step"
 
-    nodes, tets = input.stp_to_mesh(full_path_to_stp, show_gui=False)
+    # nodes, tets = input.stp_to_mesh(full_path_to_stp, show_gui=False)
 
-    engine = Engine(nodes, tets, YoungsModulus=196*10**11, PoissonsRatio=0.282)
-    engine.solve()
+    # engine = Engine(nodes, tets, 0, 0, YoungsModulus=196*10**11, PoissonsRatio=0.282)\
+    
+    tet_nodes = np.array([[0, 0, 0],
+                         [1, 0, 0],
+                         [0, 1, 0],
+                         [-1, 0, 0],
+                         [0, 0, 1]])
+    
+    dual_tets = np.array([[0, 1, 2 ,4],
+                          [0, 2, 3, 4]])
+
+    Eps = 196*10**11
+    Mu = 0.282
+
+    NBC = np.array([[4, 'z', 5000], [4, 'y', 0]])
+    EBC = np.array([[0, 'z'],
+                    [0, 'x'],
+                    [0, 'y'],
+                    [1, 'z'],
+                    [1, 'x'],
+                    [1, 'y'],
+                    [2, 'z'],
+                    [2, 'x'],
+                    [2, 'y'],
+                    [3, 'z'],
+                    [3, 'x'],
+                    [3, 'y']])
+
+    single_tet_engine =Engine(tet_nodes, dual_tets, NBC, EBC, Eps, Mu)
+    single_tet_engine.solve()
 
 
 if __name__ == '__main__':
-    #  main()
+    #  main(
     main2()
 
