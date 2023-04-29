@@ -208,6 +208,25 @@ def update_graph(num, nodes, tets, title, graph):
     graph._offsets3d = (x, y, z)
     title.set_text('3D Test, time={}'.format(num))
 
+def plot_nodes(nodes, tets, show_plt):
+
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    ax.set_xlim(xmin=np.min(nodes[:, 0]), xmax=np.max(nodes[:, 0]))
+    ax.set_ylim(ymin=np.min(nodes[:, 1]), ymax=np.max(nodes[:, 1]))
+    ax.set_zlim(zmin=np.min(nodes[:, 2]), zmax=np.max(nodes[:, 2]))
+    title = ax.set_title('3D Output')
+
+    ax.scatter(nodes[:, 0], nodes[:, 1], nodes[:, 2])
+
+    some_nodes = nodes[0:int(np.shape(nodes)[0]/10)]
+
+    for i, (x,y,z) in enumerate(some_nodes):
+        ax.text(x, y, z, str(i), color='black', fontsize=10)
+
+
+    if show_plt:
+        plt.show()
 
 if __name__ == '__main__':
     main()

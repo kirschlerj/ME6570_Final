@@ -36,10 +36,6 @@ class Engine():
         self.NBCs = NBCs
         self.EBCs = EBCs
 
-        self.K_global = np.zeros((self.num_nodes, self.num_nodes))
-        self.F = np.zeros(self.num_nodes*3)
-
-
     def solve(self):
         print("Solving...")
 
@@ -47,7 +43,9 @@ class Engine():
         self.K = self.get_K_global()
         self.F = self.get_load_vector()
         self.apply_BCs()
+        print("K:\n", self.K)
         self.d = np.linalg.solve(self.K, self.F)
+        print("d:\n", self.d)
 
 
     def get_Kelm(self, element_index):
@@ -96,7 +94,7 @@ class Engine():
 
     def get_K_global(self):
 
-        K = np.zeros((self.num_nodes*6, self.num_nodes*6))
+        K = np.zeros((self.num_nodes*3, self.num_nodes*3))
 
         for i in range(self.num_elements):
             Kelm = self.get_Kelm(i)
@@ -104,25 +102,35 @@ class Engine():
             # print("Kelm:\n", Kelm, "\n")
             for j in range(4):
                     for k in range(3):
-                        global_dof_jk = element_nodes[j]*6 + k
+                        global_dof_jk = element_nodes[j]*3 + k
                         for m in range(4):
                             for n in range(3):
-                                global_dof_mn = element_nodes[m]*6 + n
+                                global_dof_mn = element_nodes[m]*3 + n
                                 K[global_dof_jk, global_dof_mn] += Kelm[j*3+k, m*3+n]
-                                os.system('cls' if os.name == 'nt' else 'clear')
-                                print("K:\n", K)
-                                input("Enter to continue...")
                                 # os.system('cls' if os.name == 'nt' else 'clear')
-
+                                # print("K:\n", K)
+                                # input("Enter to continue...")
+        return K
 
 
     def get_load_vector(self):
 
+        F = np.zeros(self.num_nodes*3)
+        cartdict = {'x':0, 'y':1, 'z':2}
         for condition in self.NBCs:
-            print(condition)
+            load_index = cartdict[condition[1]]+3*int(condition[0])
+            F[load_index] = condition[2]
+        return F
 
     def apply_BCs(self):
-        pass
+        
+        cartdict = {'x':0, 'y':1, 'z':2}
+
+        for e_condition in self.EBCs:
+            ii = cartdict[e_condition[1]]+int(e_condition[0])*3
+            self.K[ii, :] = 0
+            self.K[:, ii] = 0
+            self.K[ii, ii] = 1
 
     def get_R(self, element_index):
         # TODO: If we ever move up to bricks & tets in the same mesh, this needs some more work.
@@ -228,7 +236,7 @@ def main2():
     Eps = 196*10**11
     Mu = 0.282
 
-    NBC = np.array([[4, 'z', 5000], [4, 'y', 0]])
+    NBC = np.array([[4, 'z', 50000], [4, 'y', 1]])
     EBC = np.array([[0, 'z'],
                     [0, 'x'],
                     [0, 'y'],
@@ -245,8 +253,35 @@ def main2():
     single_tet_engine =Engine(tet_nodes, dual_tets, NBC, EBC, Eps, Mu)
     single_tet_engine.solve()
 
+    import exhaust
+    exhaust.plot_output(tet_nodes, dual_tets, single_tet_engine.d)
+
+def main3():
+    import input
+    import exhaust
+    full_path_to_stp = r"data\t20_data.step"
+
+    nodes, tets = input.stp_to_mesh(full_path_to_stp, show_gui=False)
+    input.plot_nodes(nodes, tets, show_plt=True)
+    NBC = np.array([[34, 'z', 50000], [34, 'y', 1]])
+    EBC = np.array([[58, 'z'],
+                    [58, 'x'],
+                    [58, 'y'],
+                    [37, 'z'],
+                    [37, 'x'],
+                    [37, 'y'],
+                    [72, 'z'],
+                    [72, 'x'],
+                    [72, 'y'],
+                    [150, 'z'],
+                    [150, 'x'],
+                    [150, 'y']])
+    engine = Engine(nodes, tets, NBC, EBC, YoungsModulus=196*10**11, PoissonsRatio=0.282)
+    engine.solve()
+    exhaust.plot_output(nodes, tets, engine.d)
 
 if __name__ == '__main__':
-    #  main(
-    main2()
+    #  main()
+    # main2()
+    main3()
 
