@@ -253,12 +253,12 @@ def main2():
     single_tet_engine =Engine(tet_nodes, dual_tets, NBC, EBC, Eps, Mu)
     single_tet_engine.solve()
 
-    import exhaust
-    exhaust.plot_output(tet_nodes, dual_tets, single_tet_engine.d)
+    import output
+    output.plot_output(tet_nodes, dual_tets, single_tet_engine.d)
 
 def main3():
     import input
-    import exhaust
+    import output
     full_path_to_stp = r"data\t20_data.step"
 
     nodes, tets = input.stp_to_mesh(full_path_to_stp, show_gui=False)
@@ -278,7 +278,7 @@ def main3():
                     [150, 'y']])
     engine = Engine(nodes, tets, NBC, EBC, YoungsModulus=196*10**11, PoissonsRatio=0.282)
     engine.solve()
-    exhaust.plot_output(nodes, tets, engine.d)
+    output.plot_output(nodes, tets, engine.d)
 
 if __name__ == '__main__':
     #  main()

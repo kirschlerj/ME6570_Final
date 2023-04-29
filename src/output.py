@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.ticker import LinearLocator
 
-class Exhaust:
+class Output:
     def __init__(self, nodePTs):
         self.nodePTs = nodePTs
         self.xCoords = np.array(nodePTs[0:len(nodePTs):3])
