@@ -161,11 +161,12 @@ def SingleTet():
                             [1, 0, 0],
                             [0, 1, 0],
                             [0, 0, 1]])
-        NBC = np.array([[4, 'z', 5000], [4, 'y', 0]])
+        NBC = np.array([[4, 'z', 5000], [4, 'y', 5000], [4, 'x', 50000]])
         EBC = np.array([[1, 'z'], [1, 'x'], [1, 'y'], [2, 'z'], [2, 'x'], [2, 'y'], [3, 'z'], [3, 'x'], [3, 'y']])
         Eps = 196*10**11
         Mu = 0.282
 
+    #Ignore VVVVVVVV needs to be replaced by engine
         gm = elmesh1
         numnode = np.size(gm)/3 # Calcs number of nodes from 3D global mesh
         F = np.zeros((int(numnode*3),1))
@@ -212,6 +213,8 @@ def SingleTet():
         Y2 = 0.5*(strain[0]**2+strain[1]**2+strain[2]**2+strain[3]**2+strain[4]**2+strain[5]**2)
         eqstrain = np.sqrt((4/3)*Y2)
         vonstress = np.sqrt(0.5*((stress[0]-stress[1])**2+(stress[1]-stress[2])**2+(stress[2]-stress[0])**2)+3*(stress[3]**2+stress[4]**2+stress[5]**2))
+    # Ignore ^^^^^^^^^^^^^
+
         print('Node Displacement: ')
         print(disp)
         print('')
