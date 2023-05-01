@@ -37,7 +37,7 @@ class Engine():
         print("d:\n", self.d)
         
         # Calculate stress and strain
-        self.epsilon = self.get_global_stress_and_strain()
+        self.get_all_stress_strains()
 
 
     def get_Kelm(self, element_index):
@@ -135,9 +135,11 @@ class Engine():
                            [0, 0, 0, 0, 0, E44]])
 
 
-    def get_global_stress_and_strain(self):
-        global_stress = np.zeros((self.num_elements, 6))
-        global_strain = np.zeros((self.num_elements, 6))
+    def get_all_stress_strains(self):
+        self.global_stress = np.zeros((self.num_elements, 6))
+        self.global_strain = np.zeros((self.num_elements, 6))
+        self.eqstrain = np.zeros(self.num_elements)
+        self.vonstress = np.zeros(self.num_elements)
 
         for i in range(self.num_elements):
             element_mesh = self.get_element_mesh(i)
@@ -145,6 +147,12 @@ class Engine():
             d_i = self.get_d_i(i)
             strain = np.matmul(Bs, d_i)
             stress = np.matmul(self.D, strain)
+            self.global_strain[i, :] = strain
+            self.global_stress[i, :] = stress
+            Y2 = 0.5*(strain[0]**2+strain[1]**2+strain[2]**2+strain[3]**2+strain[4]**2+strain[5]**2)
+            self.eqstrain = np.sqrt((4/3)*Y2)
+            self.vonstress = np.sqrt(0.5*((stress[0]-stress[1])**2+(stress[1]-stress[2])**2+(stress[2]-stress[0])**2)+3*(stress[3]**2+stress[4]**2+stress[5]**2))
+
 
 
     def get_element_mesh(self, element_index):
