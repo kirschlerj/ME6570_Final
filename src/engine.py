@@ -209,6 +209,9 @@ def SingleTet():
         disp = np.linalg.solve(K,F)
         strain = np.matmul(bs,disp)
         stress = np.matmul(D,strain)
+        Y2 = 0.5*(strain[0]**2+strain[1]**2+strain[2]**2+strain[3]**2+strain[4]**2+strain[5]**2)
+        eqstrain = np.sqrt((4/3)*Y2)
+        vonstress = np.sqrt(0.5*((stress[0]-stress[1])**2+(stress[1]-stress[2])**2+(stress[2]-stress[0])**2)+3*(stress[3]**2+stress[4]**2+stress[5]**2))
         print('Node Displacement: ')
         print(disp)
         print('')
@@ -217,6 +220,10 @@ def SingleTet():
         print('')
         print('Element Stress: ')
         print(stress)
+        print('')
+        print('Equivalent Plastic Strain: ' + str(eqstrain))
+        print('')
+        print('Von Mises Stress: ' + str(vonstress))
 
 
 def main2():
