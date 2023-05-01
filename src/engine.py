@@ -60,10 +60,35 @@ class Engine():
                        [node2x, node2y, node2z],
                        [node3x, node3y, node3z]])
 
-        # print("gm:\n", gm, "\n")
 
         gaussint = np.array([(-1*np.sqrt(3/5)), 0, np.sqrt(3/5)]) # 3 point Gauss integration
         gaussweight = np.array([5/9, 8/9, 5/9]) # 3 point Gauss integration
+        Bs = self.get_Bs(gm, element_index)
+        R = self.get_R(element_index) # We already calculated this in get_Bs, but ok for now
+        Jac = np.matmul(R,gm) # We already calculated this in get_Bs, but ok for now
+
+        Kelm = np.matmul(np.matmul(Bs.transpose(), self.D), Bs)*np.linalg.det(Jac)
+        return Kelm
+
+
+    def get_K_global(self):
+
+        K = np.zeros((self.num_nodes*3, self.num_nodes*3))
+
+        for i in range(self.num_elements):
+            Kelm = self.get_Kelm(i)
+            element_nodes = self.tets[i]
+            for j in range(4):
+                    for k in range(3):
+                        global_dof_jk = element_nodes[j]*3 + k
+                        for m in range(4):
+                            for n in range(3):
+                                global_dof_mn = element_nodes[m]*3 + n
+                                K[global_dof_jk, global_dof_mn] += Kelm[j*3+k, m*3+n]
+        return K
+
+
+    def get_Bs(self, gm, element_index):
         Bs = np.zeros((6, 12)) # TODO: This is only going to work for tets
         R = self.get_R(element_index)
         Jac = np.matmul(R,gm)
@@ -76,39 +101,17 @@ class Engine():
                                             [0, dN[2,ii], dN[1,ii]],
                                             [dN[2,ii], 0, dN[0,ii]],
                                             [dN[1,ii], dN[0,ii], 0]])
-
-        Kelm = np.matmul(np.matmul(Bs.transpose(), self.D), Bs)*np.linalg.det(Jac)
-        return Kelm
-
-    def get_K_global(self):
-
-        K = np.zeros((self.num_nodes*3, self.num_nodes*3))
-
-        for i in range(self.num_elements):
-            Kelm = self.get_Kelm(i)
-            element_nodes = self.tets[i]
-            # print("Kelm:\n", Kelm, "\n")
-            for j in range(4):
-                    for k in range(3):
-                        global_dof_jk = element_nodes[j]*3 + k
-                        for m in range(4):
-                            for n in range(3):
-                                global_dof_mn = element_nodes[m]*3 + n
-                                K[global_dof_jk, global_dof_mn] += Kelm[j*3+k, m*3+n]
-                                # os.system('cls' if os.name == 'nt' else 'clear')
-                                # print("K:\n", K)
-                                # input("Enter to continue...")
-        return K
+        return Bs
 
 
     def get_load_vector(self):
-
         F = np.zeros(self.num_nodes*3)
         cartdict = {'x':0, 'y':1, 'z':2}
         for condition in self.NBCs:
             load_index = cartdict[condition[1]]+3*int(condition[0])
             F[load_index] = condition[2]
         return F
+
 
     def apply_BCs(self):
         
@@ -119,6 +122,7 @@ class Engine():
             self.K[ii, :] = 0
             self.K[:, ii] = 0
             self.K[ii, ii] = 1
+
 
     def get_R(self, element_index):
         # TODO: If we ever move up to bricks & tets in the same mesh, this needs some more work.
@@ -146,12 +150,6 @@ class Engine():
                            [0, 0, 0, E44, 0, 0],
                            [0, 0, 0, 0, E44, 0],
                            [0, 0, 0, 0, 0, E44]])
-
-
-
-
-
-
 
 
 def SingleTet():
@@ -215,12 +213,7 @@ def SingleTet():
 
 def main2():
     import input
-    # full_path_to_stp = r"data\t20_data.step"
 
-    # nodes, tets = input.stp_to_mesh(full_path_to_stp, show_gui=False)
-
-    # engine = Engine(nodes, tets, 0, 0, YoungsModulus=196*10**11, PoissonsRatio=0.282)\
-    
     tet_nodes = np.array([[0, 0, 0],
                          [1, 0, 0],
                          [0, 1, 0],

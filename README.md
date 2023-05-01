@@ -63,6 +63,18 @@ After this, `main.py` will call functions in `input.py` to generate a mesh of te
     - Engine flowchart, more details
     - Put in README I suppose
 
+5/1/2023
+
+- ABAQUS validation
+    - Cam
+- User Manual
+- Demonstration
+- Flex with bones and airplanes in engine.py
+- Multimaterial
+- Mesh refinement & error analysis
+- Break engine with truly unreasonable number of elements
+
+
 
 When $a \ne 0$, there are two solutions to $(ax^2 + bx + c = 0)$ and they are 
 
