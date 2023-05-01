@@ -16,10 +16,6 @@ class Output:
 
 
 def plot_output(nodes, tets, d):
-
-    
-    
-
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
     ax.set_xlim(xmin=np.min(nodes[:, 0]), xmax=np.max(nodes[:, 0]))
@@ -33,13 +29,11 @@ def plot_output(nodes, tets, d):
     cmap_values = np.apply_along_axis(lambda row: np.sqrt(np.sum(row**2)), axis=1, arr=d_reshaped)
     cmap = plt.get_cmap('rainbow')
 
-
     ax.scatter(nodes[:, 0], nodes[:, 1], nodes[:, 2], c=cmap_values, cmap=cmap)
     cbar = fig.colorbar(ax.collections[0], shrink=0.5)
     cbar.set_label("Displacement")
 
     plt.show()
-
 
 
 if __name__ == '__main__':
