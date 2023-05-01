@@ -123,5 +123,3 @@ if __name__ == '__main__':
     print('Z Coordinates of the nodes:')
     print(instance1.zCoords)
     print('\n')
-    print("I put in the wrong fuckin' name, my bad...")
-    
