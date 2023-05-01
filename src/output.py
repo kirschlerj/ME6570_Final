@@ -36,9 +36,82 @@ def plot_output(nodes, tets, d):
     plt.show()
 
 
+def plot_all(engine_instance):
+    e = engine_instance
+    element_centroid_coor = np.zeros((e.num_elements, 3))
+    # Get the coordinates of the center of each tetrahedron
+    for i in range(e.num_elements):
+        n1, n2, n3, n4 = e.tets[i, :]
+        p1 = e.nodes[n1]
+        p2 = e.nodes[n2]
+        p3 = e.nodes[n3]
+        p4 = e.nodes[n4]
+        x = np.mean((p1[0], p2[0], p3[0], p4[0]))
+        y = np.mean((p1[1], p2[1], p3[1], p4[1]))
+        z = np.mean((p1[2], p2[2], p3[2], p4[2]))
+        element_centroid_coor[i, :] = (x, y, z)
+        # print(element_centroid_coor[i,:])
+
+    # Plot the von Mises stress
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    ax.set_xlim(xmin=np.min(element_centroid_coor[:, 0]), xmax=np.max(element_centroid_coor[:, 0]))
+    ax.set_ylim(ymin=np.min(element_centroid_coor[:, 1]), ymax=np.max(element_centroid_coor[:, 1]))
+    ax.set_zlim(zmin=np.min(element_centroid_coor[:, 2]), zmax=np.max(element_centroid_coor[:, 2]))
+    title = ax.set_title('3D Von Mises')
+    cmap = plt.get_cmap('rainbow')
+    ax.scatter(element_centroid_coor[:, 0], element_centroid_coor[:, 1], element_centroid_coor[:, 2], c=e.vonstress, cmap=cmap)
+    cbar = fig.colorbar(ax.collections[0], shrink=0.5)
+    cbar.set_label("Von Mises")
+
+    # Plot the equivalent plastic strain
+    fig2 = plt.figure()
+    ax2 = fig2.add_subplot(111, projection='3d')
+    ax2.set_xlim(xmin=np.min(element_centroid_coor[:, 0]), xmax=np.max(element_centroid_coor[:, 0]))
+    ax2.set_ylim(ymin=np.min(element_centroid_coor[:, 1]), ymax=np.max(element_centroid_coor[:, 1]))
+    ax2.set_zlim(zmin=np.min(element_centroid_coor[:, 2]), zmax=np.max(element_centroid_coor[:, 2]))
+    title = ax2.set_title('3D Equivalent Plastic Strain')
+    ax2.scatter(element_centroid_coor[:, 0], element_centroid_coor[:, 1], element_centroid_coor[:, 2], c=e.eqstrain, cmap=cmap)
+    cbar2 = fig.colorbar(ax2.collections[0], shrink=0.5)
+    cbar2.set_label("Plastic Strain")
+
+    fig3 = plt.figure()
+    ax3 = fig3.add_subplot(111, projection='3d')
+    ax3.set_xlim(xmin=np.min(e.nodes[:, 0]), xmax=np.max(e.nodes[:, 0]))
+    ax3.set_ylim(ymin=np.min(e.nodes[:, 1]), ymax=np.max(e.nodes[:, 1]))
+    ax3.set_zlim(zmin=np.min(e.nodes[:, 2]), zmax=np.max(e.nodes[:, 2]))
+    title = ax.set_title('3D Output')
+
+    # print(np.shape(e.d)[0])
+    # print(np.shape(e.d)[0]/3)
+    d_reshaped = e.d.reshape(int(np.shape(e.d)[0]/3), 3)
+    cmap_values = np.apply_along_axis(lambda row: np.sqrt(np.sum(row**2)), axis=1, arr=d_reshaped)
+    cmap = plt.get_cmap('rainbow')
+
+    ax3.scatter(e.nodes[:, 0], e.nodes[:, 1], e.nodes[:, 2], c=cmap_values, cmap=cmap)
+    cbar = fig.colorbar(ax3.collections[0], shrink=0.5)
+    cbar.set_label("Displacement")
+
+    # Plot an exaggeration of the displacement of the part...
+    k=10000000000
+    print("e.nodes:\n", e.nodes)
+    print("d_reshaped:\n", d_reshaped)
+    displaced_coor = e.nodes + k*d_reshaped
+    print("displaced_coor:\n", displaced_coor)
+    fig4 = plt.figure()
+    ax4 = fig4.add_subplot(111, projection='3d')
+    ax4.set_xlim(xmin=np.min(displaced_coor[:, 0]), xmax=np.max(displaced_coor[:, 0]))
+    ax4.set_ylim(ymin=np.min(displaced_coor[:, 1]), ymax=np.max(displaced_coor[:, 1]))
+    ax4.set_zlim(zmin=np.min(displaced_coor[:, 2]), zmax=np.max(displaced_coor[:, 2]))
+    title = ax.set_title('3D Output, displacement vis')
+    ax4.scatter(displaced_coor[:, 0], displaced_coor[:, 1], displaced_coor[:, 2], c=cmap_values, cmap=cmap)
+    cbar = fig.colorbar(ax4.collections[0], shrink=0.5)
+    cbar.set_label("Displacement")
+
+
 if __name__ == '__main__':
     nodePTs = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-    instance1 = Exhaust(nodePTs)
+    instance1 = Output(nodePTs)
     print('X Coordinates of the nodes:')
     print(instance1.xCoords)
     print('\n')

@@ -4,10 +4,12 @@ Engine for the main. Use FEM to approximate stress/strain in the solid.
 
 
 import numpy as np
+import matplotlib.pyplot as plt
+import time
 import sys
 import os
 np.set_printoptions(precision=0,linewidth=sys.maxsize)
-
+start = time.time()
 
 class Engine():
 
@@ -150,8 +152,8 @@ class Engine():
             self.global_strain[i, :] = strain
             self.global_stress[i, :] = stress
             Y2 = 0.5*(strain[0]**2+strain[1]**2+strain[2]**2+strain[3]**2+strain[4]**2+strain[5]**2)
-            self.eqstrain = np.sqrt((4/3)*Y2)
-            self.vonstress = np.sqrt(0.5*((stress[0]-stress[1])**2+(stress[1]-stress[2])**2+(stress[2]-stress[0])**2)+3*(stress[3]**2+stress[4]**2+stress[5]**2))
+            self.eqstrain[i] = np.sqrt((4/3)*Y2)
+            self.vonstress[i] = np.sqrt(0.5*((stress[0]-stress[1])**2+(stress[1]-stress[2])**2+(stress[2]-stress[0])**2)+3*(stress[3]**2+stress[4]**2+stress[5]**2))
 
 
 
@@ -329,10 +331,14 @@ def main3():
                     [150, 'y']])
     engine = Engine(nodes, tets, NBC, EBC, YoungsModulus=196*10**11, PoissonsRatio=0.282)
     engine.solve()
-    # output.plot_output(nodes, tets, engine.d)
+    output.plot_all(engine)
+
+
 
 if __name__ == '__main__':
     # SingleTet()
     # main2()
     main3()
+    print("Runtime:", time.time()-start)
+    plt.show()
 
