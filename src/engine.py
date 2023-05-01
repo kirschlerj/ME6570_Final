@@ -208,8 +208,15 @@ def SingleTet():
             K[ii,ii] = 1
         disp = np.linalg.solve(K,F)
         strain = np.matmul(bs,disp)
+        stress = np.matmul(D,strain)
+        print('Node Displacement: ')
         print(disp)
+        print('')
+        print('Element Strain: ')
         print(strain)
+        print('')
+        print('Element Stress: ')
+        print(stress)
 
 
 def main2():
