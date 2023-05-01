@@ -72,22 +72,12 @@ class Engine():
                        [node2x, node2y, node2z],
                        [node3x, node3y, node3z]])
 
-        # print("gm:\n", gm, "\n")
 
         gaussint = np.array([(-1*np.sqrt(3/5)), 0, np.sqrt(3/5)]) # 3 point Gauss integration
         gaussweight = np.array([5/9, 8/9, 5/9]) # 3 point Gauss integration
-        Bs = np.zeros((6, 12)) # TODO: This is only going to work for tets
-        R = self.get_R(element_index)
-        Jac = np.matmul(R,gm)
-        dN = np.matmul(np.linalg.inv(Jac), R)
-        for ii in range(4):
-            icol = 3*ii
-            Bs[0:6,icol:icol+3] = np.array([[dN[0,ii], 0, 0],
-                                            [0, dN[1,ii], 0],
-                                            [0, 0, dN[2,ii]],
-                                            [0, dN[2,ii], dN[1,ii]],
-                                            [dN[2,ii], 0, dN[0,ii]],
-                                            [dN[1,ii], dN[0,ii], 0]])
+        Bs = self.get_Bs(gm, element_index)
+        R = self.get_R(element_index) # We already calculated this in get_Bs, but ok for now
+        Jac = np.matmul(R,gm) # We already calculated this in get_Bs, but ok for now
 
         Kelm = np.matmul(np.matmul(Bs.transpose(), self.D), Bs)*np.linalg.det(Jac)
         return Kelm
@@ -108,6 +98,22 @@ class Engine():
                                 global_dof_mn = element_nodes[m]*3 + n
                                 K[global_dof_jk, global_dof_mn] += Kelm[j*3+k, m*3+n]
         return K
+
+
+    def get_Bs(self, gm, element_index):
+        Bs = np.zeros((6, 12)) # TODO: This is only going to work for tets
+        R = self.get_R(element_index)
+        Jac = np.matmul(R,gm)
+        dN = np.matmul(np.linalg.inv(Jac), R)
+        for ii in range(4):
+            icol = 3*ii
+            Bs[0:6,icol:icol+3] = np.array([[dN[0,ii], 0, 0],
+                                            [0, dN[1,ii], 0],
+                                            [0, 0, dN[2,ii]],
+                                            [0, dN[2,ii], dN[1,ii]],
+                                            [dN[2,ii], 0, dN[0,ii]],
+                                            [dN[1,ii], dN[0,ii], 0]])
+        return Bs
 
 
     def get_load_vector(self):
