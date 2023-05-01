@@ -35,38 +35,20 @@ class Engine():
         print("K:\n", self.K)
         self.d = np.linalg.solve(self.K, self.F)
         print("d:\n", self.d)
+        
+        # Calculate stress and strain
+        self.epsilon = self.get_global_stress_and_strain()
 
 
     def get_Kelm(self, element_index):
 
-        # Take the mesh and get the nodes
-        node0x = self.nodes[self.tets[element_index, 0], 0]
-        node0y = self.nodes[self.tets[element_index, 0], 1]
-        node0z = self.nodes[self.tets[element_index, 0], 2]
-
-        node1x = self.nodes[self.tets[element_index, 1], 0]
-        node1y = self.nodes[self.tets[element_index, 1], 1]
-        node1z = self.nodes[self.tets[element_index, 1], 2]
-
-        node2x = self.nodes[self.tets[element_index, 2], 0]
-        node2y = self.nodes[self.tets[element_index, 2], 1]
-        node2z = self.nodes[self.tets[element_index, 2], 2]
-
-        node3x = self.nodes[self.tets[element_index, 3], 0]
-        node3y = self.nodes[self.tets[element_index, 3], 1]
-        node3z = self.nodes[self.tets[element_index, 3], 2]
-
-        gm = np.array([[node0x, node0y, node0z],
-                       [node1x, node1y, node1z],
-                       [node2x, node2y, node2z],
-                       [node3x, node3y, node3z]])
-
+        element_mesh = self.get_element_mesh(element_index)
 
         gaussint = np.array([(-1*np.sqrt(3/5)), 0, np.sqrt(3/5)]) # 3 point Gauss integration
         gaussweight = np.array([5/9, 8/9, 5/9]) # 3 point Gauss integration
-        Bs = self.get_Bs(gm, element_index)
+        Bs = self.get_Bs(element_mesh, element_index)
         R = self.get_R(element_index) # We already calculated this in get_Bs, but ok for now
-        Jac = np.matmul(R,gm) # We already calculated this in get_Bs, but ok for now
+        Jac = np.matmul(R,element_mesh) # We already calculated this in get_Bs, but ok for now
 
         Kelm = np.matmul(np.matmul(Bs.transpose(), self.D), Bs)*np.linalg.det(Jac)
         return Kelm
@@ -89,10 +71,10 @@ class Engine():
         return K
 
 
-    def get_Bs(self, gm, element_index):
+    def get_Bs(self, element_mesh, element_index):
         Bs = np.zeros((6, 12)) # TODO: This is only going to work for tets
         R = self.get_R(element_index)
-        Jac = np.matmul(R,gm)
+        Jac = np.matmul(R,element_mesh)
         dN = np.matmul(np.linalg.inv(Jac), R)
         for ii in range(4):
             icol = 3*ii
@@ -151,6 +133,62 @@ class Engine():
                            [0, 0, 0, E44, 0, 0],
                            [0, 0, 0, 0, E44, 0],
                            [0, 0, 0, 0, 0, E44]])
+
+
+    def get_global_stress_and_strain(self):
+        global_stress = np.zeros((self.num_elements, 6))
+        global_strain = np.zeros((self.num_elements, 6))
+
+        for i in range(self.num_elements):
+            element_mesh = self.get_element_mesh(i)
+            Bs = self.get_Bs(element_mesh, i)
+            d_i = self.get_d_i(i)
+            strain = np.matmul(Bs, d_i)
+            stress = np.matmul(self.D, strain)
+
+
+    def get_element_mesh(self, element_index):
+        # Take the mesh and get the nodes
+        node0x = self.nodes[self.tets[element_index, 0], 0]
+        node0y = self.nodes[self.tets[element_index, 0], 1]
+        node0z = self.nodes[self.tets[element_index, 0], 2]
+
+        node1x = self.nodes[self.tets[element_index, 1], 0]
+        node1y = self.nodes[self.tets[element_index, 1], 1]
+        node1z = self.nodes[self.tets[element_index, 1], 2]
+
+        node2x = self.nodes[self.tets[element_index, 2], 0]
+        node2y = self.nodes[self.tets[element_index, 2], 1]
+        node2z = self.nodes[self.tets[element_index, 2], 2]
+
+        node3x = self.nodes[self.tets[element_index, 3], 0]
+        node3y = self.nodes[self.tets[element_index, 3], 1]
+        node3z = self.nodes[self.tets[element_index, 3], 2]
+
+        element_mesh = np.array([[node0x, node0y, node0z],
+                                [node1x, node1y, node1z],
+                                [node2x, node2y, node2z],
+                                [node3x, node3y, node3z]])
+        return element_mesh
+    
+    def get_d_i(self, element_index):
+        """
+        Get the displacement of the four nodes that are part of the tetrahedron at element_index.
+        d_i is a 12x1 matrix.
+        """
+        n1, n2, n3, n4 = self.tets[element_index, :]
+        index1 = n1*3
+        index2 = n2*3
+        index3 = n3*3
+        index4 = n4*3
+        d_i1 = self.d[index1:index1+3]
+        d_i2 = self.d[index2:index2+3]
+        d_i3 = self.d[index3:index3+3]
+        d_i4 = self.d[index4:index4+3]
+        arrays = (d_i1, d_i2, d_i3, d_i4)
+        d_i = np.concatenate(arrays)
+
+        return d_i
 
 
 def SingleTet():
@@ -253,7 +291,7 @@ def main3():
     full_path_to_stp = r"data\t20_data.step"
 
     nodes, tets = input.stp_to_mesh(full_path_to_stp, show_gui=False)
-    input.plot_nodes(nodes, tets, show_plt=True)
+    # input.plot_nodes(nodes, tets, show_plt=True)
     NBC = np.array([[34, 'z', 50000], [34, 'y', 1]])
     EBC = np.array([[58, 'z'],
                     [58, 'x'],
@@ -269,10 +307,10 @@ def main3():
                     [150, 'y']])
     engine = Engine(nodes, tets, NBC, EBC, YoungsModulus=196*10**11, PoissonsRatio=0.282)
     engine.solve()
-    output.plot_output(nodes, tets, engine.d)
+    # output.plot_output(nodes, tets, engine.d)
 
 if __name__ == '__main__':
-    SingleTet()
+    # SingleTet()
     # main2()
-    #main3()
+    main3()
 
