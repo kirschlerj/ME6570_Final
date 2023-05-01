@@ -9,18 +9,6 @@ import os
 np.set_printoptions(precision=0,linewidth=sys.maxsize)
 
 
-class Load():
-    def __init__(self, NBCs, GlobalMesh):
-        gm = GlobalMesh
-        numnode = np.size(gm)/3 # Calcs number of nodes from 3D global mesh
-        self.F = np.zeros((int(numnode*3),1))
-        cartdict = {'x':0, 'y':1, 'z':2}
-        for NB in range(int(np.size(NBCs)/3)):
-            ii = (int(NBCs[NB][0])-1)*3 + cartdict[NBCs[NB][1].lower()]
-            self.F[ii] = NBCs[NB,2]
-
-
-
 class Engine():
     # (self, nodes, tets, bricks=-1, ElementType, GlobalMesh, DMatrix, YoungsModulus, PoissonsRatio):
     def __init__(self, nodes, tets, NBCs, EBCs, YoungsModulus, PoissonsRatio, bricks=-1):
@@ -166,7 +154,7 @@ class Engine():
 
 
 
-def main():
+def SingleTet():
     # Example material: Stainless steel in metric
     # https://www.matweb.com/search/DataSheet.aspx?MatGUID=71396e57ff5940b791ece120e4d563e0&ckck=1
     #
@@ -176,10 +164,16 @@ def main():
                             [0, 0, 1]])
         NBC = np.array([[4, 'z', 5000], [4, 'y', 0]])
         EBC = np.array([[1, 'z'], [1, 'x'], [1, 'y'], [2, 'z'], [2, 'x'], [2, 'y'], [3, 'z'], [3, 'x'], [3, 'y']])
-        in2 = Load(NBC, elmesh1)
-
         Eps = 196*10**11
         Mu = 0.282
+
+        gm = elmesh1
+        numnode = np.size(gm)/3 # Calcs number of nodes from 3D global mesh
+        F = np.zeros((int(numnode*3),1))
+        cartdict = {'x':0, 'y':1, 'z':2}
+        for NB in range(int(np.size(NBC)/3)):
+            ii = (int(NBC[NB][0])-1)*3 + cartdict[NBC[NB][1].lower()]
+            F[ii] = NBC[NB,2]
         E11 = Eps*(1-Mu)/((1+Mu)*(1-2*Mu))
         E12 = Eps*Mu/((1+Mu)*(1-2*Mu))
         E44 = Eps/(2*(1-Mu**2))
@@ -213,8 +207,11 @@ def main():
             K[ii,:] = 0
             K[:,ii] = 0
             K[ii,ii] = 1
-        Answers = np.linalg.solve(K,in2.F)
-        print(Answers)
+        disp = np.linalg.solve(K,F)
+        strain = np.matmul(bs,disp)
+        print(disp)
+        print(strain)
+
 
 def main2():
     import input
@@ -281,7 +278,7 @@ def main3():
     output.plot_output(nodes, tets, engine.d)
 
 if __name__ == '__main__':
-    #  main()
+    SingleTet()
     # main2()
-    main3()
+    #main3()
 
