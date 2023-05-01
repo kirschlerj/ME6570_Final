@@ -10,7 +10,7 @@ np.set_printoptions(precision=0,linewidth=sys.maxsize)
 
 
 class Engine():
-    # (self, nodes, tets, bricks=-1, ElementType, GlobalMesh, DMatrix, YoungsModulus, PoissonsRatio):
+
     def __init__(self, nodes, tets, NBCs, EBCs, YoungsModulus, PoissonsRatio, bricks=-1):
         print("Initialize engine...")
         self.init_material_properties(YoungsModulus, PoissonsRatio)
@@ -23,6 +23,7 @@ class Engine():
 
         self.NBCs = NBCs
         self.EBCs = EBCs
+
 
     def solve(self):
         print("Solving...")
