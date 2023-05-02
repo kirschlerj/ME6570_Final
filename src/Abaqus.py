@@ -14,7 +14,7 @@ import os
 
 
 def main():
-
+    print(1)
     # Run an example...
     stp_path = os.path.join(os.getcwd(), "data", "t20_data.step")
     nodes, tets = stp_to_mesh(stp_path, False)
