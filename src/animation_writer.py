@@ -13,6 +13,7 @@ png_files = sorted([os.path.join(png_dir, f) for f in os.listdir(png_dir) if f.e
 writer = imageio.get_writer('output.mp4', fps=60)
 
 # Loop over the PNG files and add them to the video
+print(png_files)
 for png_file in png_files:
     img = imageio.imread(png_file)
     writer.append_data(img)

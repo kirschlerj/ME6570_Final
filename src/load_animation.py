@@ -5,6 +5,7 @@ Save a series of pictures of changing load on a nut, use this to make a .mp4 of 
 
 import numpy as np
 import matplotlib.pyplot as plt
+import imageio
 import os
 
 import input
@@ -15,7 +16,7 @@ STEP_PATH = os.path.join(".", "data", "t20_data.step")
 
 nodes, tets = input.stp_to_mesh(STEP_PATH, show_gui=False)
 
-num_frames = 8*60
+num_frames = 8*30
 force_linspace = np.linspace(0, 50000, num_frames)
 
 # print(num_frames)
@@ -40,3 +41,19 @@ for i in range(num_frames):
     engine1.solve()
     print(i)
     output.plot_displacement(engine1, i, force_linspace[i], to_save=True)
+
+png_dir = os.path.join(".", "images", "animation")
+
+png_files = sorted([os.path.join(png_dir, f) for f in os.listdir(png_dir) if f.endswith('.png')])
+
+# Create a writer object to write the video
+writer = imageio.get_writer('output.mp4', fps=30)
+
+# Loop over the PNG files and add them to the video
+print(png_files)
+for png_file in png_files:
+    img = imageio.imread(png_file)
+    writer.append_data(img)
+
+# Close the writer to finalize the video
+writer.close()

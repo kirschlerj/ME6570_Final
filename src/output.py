@@ -124,7 +124,7 @@ def plot_displacement(engine_instance, index, force, to_save=True):
     # print("d_reshaped:\n", d_reshaped)
     displaced_coor = e.nodes + k*d_reshaped
     # print("displaced_coor:\n", displaced_coor)
-    fig4 = plt.figure()
+    fig4 = plt.figure(1)
     ax = fig4.add_subplot(111, projection='3d')
     # ax.set_xlim(xmin=np.min(displaced_coor[:, 0]), xmax=np.max(displaced_coor[:, 0]))
     # ax.set_ylim(ymin=np.min(displaced_coor[:, 1]), ymax=np.max(displaced_coor[:, 1]))
@@ -140,9 +140,12 @@ def plot_displacement(engine_instance, index, force, to_save=True):
     if to_save:
         PATH = os.path.join(".", "images", "animation")
         os.makedirs(PATH, exist_ok=True)
-        FILE_PATH = os.path.join(PATH, str(index) + ".png")
+        index_formatted = '{:0>3}'.format(index)
+        FILE_PATH = os.path.join(PATH, index_formatted + ".png")
         print(FILE_PATH)
-        plt.savefig(FILE_PATH, dpi=300)
+        plt.savefig(FILE_PATH, dpi=100)
+        plt.cla()
+        plt.clf()
 
 if __name__ == '__main__':
     nodePTs = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
