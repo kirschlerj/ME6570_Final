@@ -18,8 +18,10 @@ def main():
     # Run an example...
     stp_path = os.path.join(os.getcwd(), "data", "t20_data.step")
     nodes, tets = stp_to_mesh(stp_path, False)
-    plot_mesh(nodes, tets)
+    # plot_mesh(nodes, tets)
+    plot_nodes(nodes, tets, True)
     animate_mesh(nodes, tets, False)
+
 
 
 def stp_to_mesh(path_to_stp, show_gui):
@@ -221,9 +223,10 @@ def plot_nodes(nodes, tets, show_plt):
 
     some_nodes = nodes[0:int(np.shape(nodes)[0]/10)]
 
-    for i, (x,y,z) in enumerate(some_nodes):
-        ax.text(x, y, z, str(i), color='black', fontsize=10)
+    # for i, (x,y,z) in enumerate(some_nodes):
+    #     ax.text(x, y, z, str(i), color='black', fontsize=10)
 
+    
 
     if show_plt:
         plt.show()
