@@ -41,7 +41,6 @@ def plot_all(engine_instance):
     e = engine_instance
     element_centroid_coor = np.zeros((e.num_elements, 3))
     # Get the coordinates of the center of each tetrahedron
-    print('line 44')
     for i in range(e.num_elements):
         n1, n2, n3, n4 = e.tets[i, :]
         p1 = e.nodes[n1]
@@ -55,7 +54,6 @@ def plot_all(engine_instance):
         # print(element_centroid_coor[i,:])
 
     # Plot the von Mises stress
-    print('line 58')
     fig1 = plt.figure()
     ax = fig1.add_subplot(111, projection='3d')
     ax.set_xlim(xmin=np.min(element_centroid_coor[:, 0]), xmax=np.max(element_centroid_coor[:, 0]))
@@ -69,7 +67,6 @@ def plot_all(engine_instance):
     cbar.set_label("Von Mises [MPa]")
 
     # Plot the equivalent plastic strain
-    print('line 72')
     fig2 = plt.figure()
     ax = fig2.add_subplot(111, projection='3d')
     ax.set_xlim(xmin=np.min(element_centroid_coor[:, 0]), xmax=np.max(element_centroid_coor[:, 0]))
@@ -82,7 +79,6 @@ def plot_all(engine_instance):
     cbar2.set_label("Plastic Strain [%]")
 
     # Plot the original part with displacement colormap...
-    print('line 85')
     fig3 = plt.figure()
     ax = fig3.add_subplot(111, projection='3d')
     ax.set_xlim(xmin=np.min(e.nodes[:, 0]), xmax=np.max(e.nodes[:, 0]))
@@ -99,7 +95,6 @@ def plot_all(engine_instance):
 
 
     # Plot an exaggeration of the displacement of the part...
-    print('line 102')
     k=10000000000
     # print("e.nodes:\n", e.nodes)
     # print("d_reshaped:\n", d_reshaped)

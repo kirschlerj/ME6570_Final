@@ -103,8 +103,8 @@ def stp_to_mesh(path_to_stp, show_gui):
         gmsh.model.removeEntities(gmsh.model.getEntities(0))
 
     # Finally, let's specify a global mesh size and mesh the partitioned model:
-    gmsh.option.setNumber("Mesh.MeshSizeMin", 15)
-    gmsh.option.setNumber("Mesh.MeshSizeMax", 15)
+    gmsh.option.setNumber("Mesh.MeshSizeMin", 50)
+    gmsh.option.setNumber("Mesh.MeshSizeMax", 50)
     gmsh.model.mesh.generate(3)
     gmsh.write(os.path.join("data", "t20.msh"))
 
