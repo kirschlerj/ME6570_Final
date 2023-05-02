@@ -15,7 +15,7 @@ import os
 
 def main():
     # Run an example...
-    stp_path = os.path.join(os.getcwd(), "data", "t20_data.step")
+    stp_path = os.path.join(os.getcwd(), "data", "hex_rod.stp")
     nodes, tets = stp_to_mesh(stp_path, False)
     plot_mesh(nodes, tets)
     animate_mesh(nodes, tets, False)
@@ -102,7 +102,7 @@ def stp_to_mesh(path_to_stp, show_gui):
     gmsh.option.setNumber("Mesh.MeshSizeMin", 3)
     gmsh.option.setNumber("Mesh.MeshSizeMax", 3)
     gmsh.model.mesh.generate(3)
-    gmsh.write(os.path.join("data", "t20.inp"))
+    gmsh.write(os.path.join("data", "hex_rod.inp"))
 
     if show_gui:
         # Launch the GUI to see the results:
@@ -119,7 +119,7 @@ def stp_to_mesh(path_to_stp, show_gui):
     gmsh.finalize()
 
     # Use meshio to read gmsh file...
-    meshio_mesh = meshio.read(os.path.join("data", "t20.inp"))
+    meshio_mesh = meshio.read(os.path.join("data", "hex_rod.inp"))
 
     # print("meshio_mesh:\n", meshio_mesh)
     # print("\n#------------------------------------------------------------------------------\n")
