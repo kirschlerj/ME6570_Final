@@ -24,7 +24,7 @@ def main():
 
 
 
-def stp_to_mesh(path_to_stp, show_gui):
+def stp_to_mesh(path_to_stp, show_gui, mesh_size_factor=1):
 
     # Before using any functions in the Python API, Gmsh must be initialized:
     gmsh.initialize()
@@ -103,7 +103,8 @@ def stp_to_mesh(path_to_stp, show_gui):
 
     # Finally, let's specify a global mesh size and mesh the partitioned model:
     gmsh.option.setNumber("Mesh.MeshSizeMin", 3)
-    gmsh.option.setNumber("Mesh.MeshSizeMax", 3)
+    gmsh.option.setNumber("Mesh.MeshSizeMax", 10)
+    gmsh.option.setNumber("Mesh.MeshSizeFactor", mesh_size_factor)
     gmsh.model.mesh.generate(3)
     gmsh.write(os.path.join("data", "t20.msh"))
 
