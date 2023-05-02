@@ -105,7 +105,7 @@ def stp_to_mesh(path_to_stp, show_gui):
     gmsh.option.setNumber("Mesh.MeshSizeMin", 3)
     gmsh.option.setNumber("Mesh.MeshSizeMax", 3)
     gmsh.model.mesh.generate(3)
-    gmsh.write(os.path.join("data", "t20.msh"))
+    gmsh.write(os.path.join("data", "t20.inp"))
 
     if show_gui:
         # Launch the GUI to see the results:

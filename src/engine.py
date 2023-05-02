@@ -34,9 +34,9 @@ class Engine():
         self.K = self.get_K_global()
         self.F = self.get_load_vector()
         self.apply_BCs()
-        print("K:\n", self.K)
+        # print("K:\n", self.K)
         self.d = np.linalg.solve(self.K, self.F)
-        print("d:\n", self.d)
+        # print("d:\n", self.d)
         
         # Calculate stress and strain
         self.get_all_stress_strains()
