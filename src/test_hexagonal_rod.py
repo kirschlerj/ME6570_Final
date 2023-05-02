@@ -6,7 +6,7 @@ import numpy as np
 import os
 import input
 
-nodes, tets = input.stp_to_mesh(os.path.join('.','data','hex_rod.stp'), True, mesh_size_factor=5)
+nodes, tets = input.stp_to_mesh(os.path.join('.','data','hex_rod.stp'), True, mesh_size_factor=.1, save_inp=True)
 
 print("number of nodes:", np.shape(nodes)[0])
 print("number of elements:", np.shape(tets)[0])
