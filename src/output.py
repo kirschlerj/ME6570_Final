@@ -137,7 +137,9 @@ def plot_displacement(engine_instance, index, force, to_save=True, cmap_max=Fals
     ax.scatter(displaced_coor[:, 0], displaced_coor[:, 1], displaced_coor[:, 2], c=cmap_values, cmap=cmap)
     cbar = fig4.colorbar(ax.collections[0], shrink=0.5)
     if cmap_max != False:
-        plt.clim(0, cmap_max)
+        cbar = fig4.colorbar(ax.collections[0], shrink=0.5)
+    else:
+        cbar = fig4.colorbar(ax.collections[0], shrink=0.5)
     cbar.set_label("Displacement [m]")
     if to_save:
         PATH = os.path.join(".", "images", "animation")
