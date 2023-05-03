@@ -236,17 +236,31 @@ def Mahogany2x4():
     # African Mahogany 2x4
     #
     import input
+    import output
 
     Eps = (10**9)*np.array([9.7, 0.49, 1.08]) # Youngs Modulus input in form of [E1, E2, E3] Pa
     SM = (10**9)*np.array([0.57, 0.85, 0.20]) # Shear Modulus input in form of [G12, G13, G23] Pa
     Mu = np.array([0.64, 0.30, 0.03, 0.26, 0.03, 0.60]) #Poissons Ratio input in form of [v12, v13, v21, v23, v31, v32]
 
     full_path_to_stp = os.path.join(os.getcwd(), "data", "plank.stp")
-    nodes, tets = input.stp_to_mesh(full_path_to_stp, show_gui=True)
+    nodes, tets = input.stp_to_mesh(full_path_to_stp, show_gui=False)
 
-    NBC = np.array([[]])
+    NBC = np.array([[43, 'x', 10], [44, 'y', 20]])
     EBC = np.array([[46, 'x'],
-                    [48, 'x']])
+                    [48, 'x'],
+                    [39, 'x'],
+                    [35, 'x'],
+                    [46, 'y'],
+                    [48, 'y'],
+                    [39, 'y'],
+                    [35, 'y'],
+                    [46, 'z'],
+                    [48, 'z'],
+                    [39, 'z'],
+                    [35, 'z']])
+    plank_engine = Engine(nodes, tets, NBC, EBC, Eps, Mu, SM, Anisotropic = True)
+    plank_engine.solve()
+    output.plot_all(plank_engine)
 
 
 def main2():
