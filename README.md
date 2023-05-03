@@ -60,7 +60,20 @@ The mesh in this problem was initially made coarse with 65 tet elements and refi
 
 ## Results Comparison
 
+A comparison of the code results to the Abaqus results can be seen in the table below for validation of the program. Since they use different meshing teqniques the values might be slightly different and have different amounts of elements but this shows that the program can work as expected. 
 
+| Run # | Abaqus # of elms  | Abaqus max displacement | Python # of elms | Python max displacement | % difference |
+| ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
+| 1 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
+| 2 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
+| 3 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
+| 4 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
+| 5 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
+| 6 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
+| 7 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
+| 8 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
+| 9 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
+| 10 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
 
 # TODO
 
@@ -72,7 +85,7 @@ The mesh in this problem was initially made coarse with 65 tet elements and refi
     - Dan
 - Problem statement stuff
 - Comparison
-    - Cam?
+    - Cam
 - User manual in README
     - Colton
 - Flowchart
