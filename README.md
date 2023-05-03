@@ -54,7 +54,7 @@ To run Abaqus using the same part files as in the python code they were imported
 
 Because of this error the meshing operation had to be done using the Abaqus mesher instead of gmsh. For simplification of applying the boundary conditions and loads into both the Python code and Abaqus, we decided to use a hexagonal rod. One face of the rod was constrained using the boundary conditions that it could not displace or rotate. The other end was left free and a load which matched the 50,000 N in the code was applied as shown below:
 
-<img src="https://github.com/ColtonWright51/ME6570_Final/blob/c77790a24e273e6e40c1c877fdd457344982ca52/images/AbaqusPics/HexLoading.png" width="450" height="350">
+<img src="https://github.com/ColtonWright51/ME6570_Final/blob/82dd11de9a5b5e1d19006ffcffca3c599938024a/images/AbaqusPics/HexLoading.png" width="450" height="350">
 
 The mesh in this problem was initially made coarse with 65 tet elements and refined 10 times until reaching the free learning edition of Abaqus limit of 1,000 nodes. From this the max displacement in the y direction and Von Mises stress were analyzed for comparison to our engine. The results for this can be cound in the results comparison section. 
 
