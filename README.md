@@ -51,7 +51,7 @@ After this, `main.py` will call functions in `input.py` to generate a mesh of te
 To run Abaqus using the same part files as in the python code they were imported as STEP files. Gmsh has the ability to creat .inp files which can be directly imported into Abaqus but the software throws an error when attempting to assign material properties to the entire section as seen below:
 
 <!-- ![alt text](https://github.com/ColtonWright51/ME6570_Final/blob/487d2de24c1645b34c6908301b5eab5665bff01f/images/AbaqusPics/MaterialError.png) -->
-<img src="https://github.com/ColtonWright51/ME6570_Final/blob/487d2de24c1645b34c6908301b5eab5665bff01f/images/AbaqusPics/MaterialError.png" width="500" height="400">
+<img src="https://github.com/ColtonWright51/ME6570_Final/blob/487d2de24c1645b34c6908301b5eab5665bff01f/images/AbaqusPics/MaterialError.png" width="700" height="400">
 
 # TODO
 
