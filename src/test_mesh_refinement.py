@@ -7,7 +7,7 @@ import os
 import input
 import pandas as pd
 
-mesh_size_factors = np.array([.4, .6, .8, 1, 2, 3, 4, 6, 8, 10])
+mesh_size_factors = np.array([.25, .255, .26, .3, .4, .6, .8, 1, 2, 3, 4, 6, 8, 10])
 EBC = []
 NBC = []
 
@@ -18,7 +18,7 @@ load = -50000
 df = pd.DataFrame(columns=['Mesh Size Factor', 'Youngs Modulus', 'Poissons Ratio', 'Load', 'Number Elements','Number Nodes', 'Displacement', 'Points Loaded'])
 points_loaded = 0
 for i, msf in enumerate(mesh_size_factors):
-    nodes, tets = input.stp_to_mesh(os.path.join('.','data','hex_rod.stp'), False, mesh_size_factor=msf)
+    nodes, tets = input.stp_to_mesh(os.path.join('.','data','hex_rod_mm.stp'), False, mesh_size_factor=msf)
     nodes = nodes
     print(nodes)
 
@@ -29,7 +29,7 @@ for i, msf in enumerate(mesh_size_factors):
             EBC.append([j, 'y'])
             EBC.append([j, 'z'])
 
-        if np.isclose(node[0], -4.12648, atol=.001) and np.isclose(node[1], 12.70000, atol=.001) and np.isclose(node[2], 76.20000, atol=.001):
+        if np.isclose(node[0], -7.332, atol=.1) and np.isclose(node[1], 12.70000, atol=.1) and np.isclose(node[2], 76.20000, atol=.1):
             NBC.append([j, 'z', load])
             NBC.append([j, 'y', 0])
             NBC.append([j, 'x', 0])

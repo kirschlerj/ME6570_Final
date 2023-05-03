@@ -95,7 +95,7 @@ def plot_all(engine_instance):
 
 
     # Plot an exaggeration of the displacement of the part...
-    k=10000000000
+    k=5
     # print("e.nodes:\n", e.nodes)
     # print("d_reshaped:\n", d_reshaped)
     displaced_coor = e.nodes + k*d_reshaped
