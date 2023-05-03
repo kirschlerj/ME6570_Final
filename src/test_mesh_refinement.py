@@ -11,7 +11,7 @@ mesh_size_factors = np.array([.4, .6, .8, 1, 2, 3, 4, 6, 8, 10])
 EBC = []
 NBC = []
 
-youngs = 196e9
+youngs = 196e11
 poisson = 0.282
 load = 50000
 
@@ -39,7 +39,7 @@ for i, msf in enumerate(mesh_size_factors):
 
     engine1 = engine.Engine(nodes = nodes, tets = tets, NBCs = NBC, EBCs = EBC, YoungsModulus= youngs, PoissonsRatio= poisson)
     engine1.solve()
-    # test_output.plot_all(engine1)
+    test_output.plot_all(engine1)
     df = df._append({'Displacement': np.max(engine1.d),
                     'Youngs Modulus': youngs,
                     'Poissons Ratio': poisson,
