@@ -85,7 +85,7 @@ A comparison of the code results to the Abaqus results can be seen in the table 
     - Dan
 - Problem statement stuff
 - Comparison
-    - Cam?
+    - Cam
 - User manual in README
     - Colton
 - Flowchart
