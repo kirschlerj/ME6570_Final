@@ -60,7 +60,7 @@ The mesh in this problem was initially made coarse with 65 tet elements and refi
 
 ## Results Comparison
 
-A comparison of the code results to the Abaqus results can be seen in the table below for validation of the program. Since they use different meshing teqniques the values might be slightly different and have different amounts of elements but this shows that the program can work as expected. 
+A comparison of the code results to the Abaqus results can be seen in the table below for validation of the program: 
 
 | Run # | Abaqus # of elms (mm)  | Abaqus max displacement | Python # of elms | Python max displacement (mm) | % error |
 | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
@@ -69,6 +69,14 @@ A comparison of the code results to the Abaqus results can be seen in the table 
 | 3 | 518  | -0.01269 | 500 | -0.000269 | 97.8 |
 | 4 | 1037  | -0.0143  | 1474 | -0.000457 | 96.8 |
 | 5 | 2333  | -0.01563  | 2232 | -0.000510 | 96.7 |
+
+It can be seen that the program has roughly 100% error for each of the runs regardless of the number of elements used but that it does not converge with the examples. Since Abaqus limits the number of nodes allowed in their free version we are not able to compare any higher than around 2000 elements with this system but our program can be tested with much higher numbers of elements to see how it converges. The comparison of this run with the max run allowedxd by Abuqus can be seen below:
+
+| Abaqus # of elms (mm)  | Abaqus max displacement | Python # of elms | Python max displacement (mm) | % error |
+| ------------- | ------------- | ------------- | ------------- | ------------- |
+| 2333  | -0.01563  | 22608 | -0.00123 | 92.1 |
+
+The results of this show that as our elements get smaller there is still an error of around 90%, but it is decreasing. This error could possibly be from meshing differences between gmsh and Abaqus since they are not completed the same way.
 
 # TODO
 
