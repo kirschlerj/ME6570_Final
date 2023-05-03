@@ -11,11 +11,12 @@ mesh_size_factors = np.array([.4, .6, .8, 1, 2, 3, 4, 6, 8, 10])
 EBC = []
 NBC = []
 
-youngs = 196e11
+youngs = 196e5
 poisson = 0.282
-load = 50000
+load = -50000
 
-df = pd.DataFrame(columns=['Mesh Size Factor', 'Youngs Modulus', 'Poissons Ratio', 'Load', 'Number Elements','Number Nodes', 'Displacement'])
+df = pd.DataFrame(columns=['Mesh Size Factor', 'Youngs Modulus', 'Poissons Ratio', 'Load', 'Number Elements','Number Nodes', 'Displacement', 'Points Loaded'])
+points_loaded = 0
 for i, msf in enumerate(mesh_size_factors):
     nodes, tets = input.stp_to_mesh(os.path.join('.','data','hex_rod.stp'), False, mesh_size_factor=msf)
     nodes = nodes
@@ -32,6 +33,7 @@ for i, msf in enumerate(mesh_size_factors):
             NBC.append([j, 'z', load])
             NBC.append([j, 'y', 0])
             NBC.append([j, 'x', 0])
+            points_loaded += 1
 
     print(EBC)
     print(NBC)
@@ -39,16 +41,18 @@ for i, msf in enumerate(mesh_size_factors):
 
     engine1 = engine.Engine(nodes = nodes, tets = tets, NBCs = NBC, EBCs = EBC, YoungsModulus= youngs, PoissonsRatio= poisson)
     engine1.solve()
-    test_output.plot_all(engine1)
+    # test_output.plot_all(engine1)
     df = df._append({'Displacement': np.max(engine1.d),
                     'Youngs Modulus': youngs,
                     'Poissons Ratio': poisson,
                     'Load': load,
+                    'Points Loaded': points_loaded,
                     'Number Elements': np.shape(tets)[0],
                     'Number Nodes': np.shape(nodes)[0],
                     'Mesh Size Factor': msf}, ignore_index=True)
     EBC = []
     NBC = []
+    points_loaded = 0
 
 df.to_csv(os.path.join(".", "data", "test_mesh_refinement_results"))
 print(df)
