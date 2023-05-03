@@ -13,9 +13,9 @@ start = time.time()
 
 class Engine():
 
-    def __init__(self, nodes, tets, NBCs, EBCs, YoungsModulus, PoissonsRatio, bricks=-1):
+    def __init__(self, nodes, tets, NBCs, EBCs, YoungsModulus, PoissonsRatio, ShearModulus, bricks=-1, Anisotropic = False):
         print("Initialize engine...")
-        self.init_material_properties(YoungsModulus, PoissonsRatio)
+        self.init_material_properties(YoungsModulus, PoissonsRatio, ShearModulus, Anisotropic)
         self.nodes = nodes # Node positions
         self.tets = tets # The iconn, nodal tag of each element
         self.bricks = bricks
@@ -122,19 +122,28 @@ class Engine():
         return R
 
 
-    def init_material_properties(self, YoungsModulus, PoissonsRatio):
+    def init_material_properties(self, YoungsModulus, PoissonsRatio, ShearModulus):
         # defines D matrix given material properties for an isotropic material 
         Eps = YoungsModulus
         Mu = PoissonsRatio
-        E11 = Eps*(1-Mu)/((1+Mu)*(1-2*Mu))
-        E12 = Eps*Mu/((1+Mu)*(1-2*Mu))
-        E44 = Eps/(2*(1-Mu**2))
-        self.D = np.array([[E11, E12, E12, 0, 0, 0],
-                           [E12, E11, E12, 0, 0, 0],
-                           [E12, E12, E11, 0, 0, 0],
-                           [0, 0, 0, E44, 0, 0],
-                           [0, 0, 0, 0, E44, 0],
-                           [0, 0, 0, 0, 0, E44]])
+        if Anisotropic == True:
+            SM = ShearModulus
+            self.D = np.array([[1/Eps[0], -Mu[2]/Eps[1], -Mu[4]/Eps[2], 0, 0, 0],
+                               [-Mu[0]/Eps[0], 1/Eps[1], -Mu[5]/Eps[2], 0, 0, 0],
+                               [-Mu[1]/Eps[0], -Mu[3]/Eps[1], 1/Eps[2], 0, 0, 0],
+                               [0, 0, 0, 1/(2*SM[2]), 0, 0],
+                               [0, 0, 0, 0, 1/(2*SM[1]), 0],
+                               [0, 0, 0, 0, 0, 1/(2*SM[0])],])
+        else:
+            E11 = Eps*(1-Mu)/((1+Mu)*(1-2*Mu))
+            E12 = Eps*Mu/((1+Mu)*(1-2*Mu))
+            E44 = Eps/(2*(1-Mu**2))
+            self.D = np.array([[E11, E12, E12, 0, 0, 0],
+                                [E12, E11, E12, 0, 0, 0],
+                                [E12, E12, E11, 0, 0, 0],
+                                [0, 0, 0, E44, 0, 0],
+                                [0, 0, 0, 0, E44, 0],
+                                [0, 0, 0, 0, 0, E44]])
 
 
     def get_all_stress_strains(self):
@@ -221,6 +230,20 @@ def SingleTet():
         import output
         output.plot_output(elmesh1, iconn, single_tet_engine.d)
 
+def Mahogany2x4():
+    # J. Lawerence Katz, Paulette Spencer, Yong Wang "On the anisotropic elastic properties of woods" Journal of Materials Science [Sep 2008]
+    # Available from: https://www.researchgate.net/figure/Technical-moduli-for-11-woods-measured-by-quasi-static-techniques-33_tbl1_225499181
+    # African Mahogany 2x4
+    #
+    import input
+
+    Eps = (10**9)*np.array([9.7, 0.49, 1.08]) # Youngs Modulus input in form of [E1, E2, E3] Pa
+    SM = (10**9)*np.array([0.57, 0.85, 0.20]) # Shear Modulus input in form of [G12, G13, G23] Pa
+    Mu = np.array([0.64, 0.30, 0.03, 0.26, 0.03, 0.60]) #Poissons Ratio input in form of [v12, v13, v21, v23, v31, v32]
+
+    full_path_to_stp = os.path.join(os.getcwd(), "data", "plank.step")
+    nodes, tets = input.stp_to_mesh(full_path_to_stp, show_gui=True)
+
 
 def main2():
     import input
@@ -286,7 +309,8 @@ def main3():
 if __name__ == '__main__':
     #SingleTet()
     # main2()
-    main3()
+    #main3()
+    Mahogany2x4()
     print("Runtime:", time.time()-start)
     plt.show()
 
