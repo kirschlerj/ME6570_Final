@@ -45,6 +45,12 @@ This follows a general format we use to pass arguments to scripts all the time:
 
 After this, `main.py` will call functions in `input.py` to generate a mesh of tets and return the variables into `main.py`. TODO: add info on force & BC's. After these steps are taken, the engine is called to solve for stress and strain. The data is then saved and plotted for analysis.
 
+# Abaqus
+
+To run Abaqus using the same part files as in the python code they were imported as STEP files. Gmsh has the ability to creat .inp files which can be directly imported into Abaqus but the software throws an error when attempting to assign material properties to the entire section as seen below:
+
+![alt text]()
+
 # TODO
 
 - Input
