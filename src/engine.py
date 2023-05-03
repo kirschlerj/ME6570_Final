@@ -209,72 +209,17 @@ def SingleTet():
                             [1, 0, 0],
                             [0, 1, 0],
                             [0, 0, 1]])
-        NBC = np.array([[4, 'z', 5000], [4, 'y', 5000], [4, 'x', 50000]])
-        EBC = np.array([[1, 'z'], [1, 'x'], [1, 'y'], [2, 'z'], [2, 'x'], [2, 'y'], [3, 'z'], [3, 'x'], [3, 'y']])
+        iconn = np.array([[0, 1, 2, 3]])
+        NBC = np.array([[3, 'z', 5000], [3, 'y', 5000], [3, 'x', 50000]])
+        EBC = np.array([[0, 'z'], [0, 'x'], [0, 'y'], [1, 'z'], [1, 'x'], [1, 'y'], [2, 'z'], [2, 'x'], [2, 'y']])
         Eps = 196*10**11
         Mu = 0.282
 
-    #Ignore VVVVVVVV needs to be replaced by engine
-        gm = elmesh1
-        numnode = np.size(gm)/3 # Calcs number of nodes from 3D global mesh
-        F = np.zeros((int(numnode*3),1))
-        cartdict = {'x':0, 'y':1, 'z':2}
-        for NB in range(int(np.size(NBC)/3)):
-            ii = (int(NBC[NB][0])-1)*3 + cartdict[NBC[NB][1].lower()]
-            F[ii] = NBC[NB,2]
-        E11 = Eps*(1-Mu)/((1+Mu)*(1-2*Mu))
-        E12 = Eps*Mu/((1+Mu)*(1-2*Mu))
-        E44 = Eps/(2*(1-Mu**2))
-        D = np.array([[E11, E12, E12, 0, 0, 0],
-                    [E12, E11, E12, 0, 0, 0],
-                    [E12, E12, E11, 0, 0, 0],
-                    [0, 0, 0, E44, 0, 0],
-                    [0, 0, 0, 0, E44, 0],
-                    [0, 0, 0, 0, 0, E44]])
-        
-        gm = elmesh1
-        numnode = np.size(gm)/3 # Calcs number of nodes from 3D global mesh
-        bs = np.zeros((6, int(numnode*3)))
-        R = np.array([[1, 0, 0, -1],
-                          [0, 1, 0, -1],
-                          [0, 0, 1, -1]])
-        Jac = np.matmul(R,gm)
-        dN = np.matmul(np.linalg.inv(Jac),R)
-        for ii in range(4):
-            icol = 3*ii
-            bs[0:6,icol:icol+3] = np.array([[dN[0,ii], 0, 0],
-                            [0, dN[1,ii], 0],
-                            [0, 0, dN[2,ii]],
-                            [0, dN[2,ii], dN[1,ii]],
-                            [dN[2,ii], 0, dN[0,ii]],
-                            [dN[1,ii], dN[0,ii], 0]])
-        K = np.matmul(np.matmul(bs.transpose(), D), bs)*np.linalg.det(Jac)
-        cartdict = {'x':0, 'y':1, 'z':2}
-        for eb in range(int(np.size(EBC)/2)):
-            ii = (int(EBC[eb][0])-1)*3 + cartdict[EBC[eb][1].lower()]
-            K[ii,:] = 0
-            K[:,ii] = 0
-            K[ii,ii] = 1
-        disp = np.linalg.solve(K,F)
-        strain = np.matmul(bs,disp)
-        stress = np.matmul(D,strain)
-        Y2 = 0.5*(strain[0]**2+strain[1]**2+strain[2]**2+strain[3]**2+strain[4]**2+strain[5]**2)
-        eqstrain = np.sqrt((4/3)*Y2)
-        vonstress = np.sqrt(0.5*((stress[0]-stress[1])**2+(stress[1]-stress[2])**2+(stress[2]-stress[0])**2)+3*(stress[3]**2+stress[4]**2+stress[5]**2))
-    # Ignore ^^^^^^^^^^^^^
+        single_tet_engine =Engine(elmesh1, iconn, NBC, EBC, Eps, Mu)
+        single_tet_engine.solve()
 
-        print('Node Displacement: ')
-        print(disp)
-        print('')
-        print('Element Strain: ')
-        print(strain)
-        print('')
-        print('Element Stress: ')
-        print(stress)
-        print('')
-        print('Equivalent Plastic Strain: ' + str(eqstrain))
-        print('')
-        print('Von Mises Stress: ' + str(vonstress))
+        import output
+        output.plot_output(elmesh1, iconn, single_tet_engine.d)
 
 
 def main2():
@@ -315,7 +260,7 @@ def main2():
 def main3():
     import input
     import output
-    full_path_to_stp = r"data\t20_data.step"
+    full_path_to_stp = os.path.join(os.getcwd(), "data", "t20_data.step")
 
     nodes, tets = input.stp_to_mesh(full_path_to_stp, show_gui=False)
     # input.plot_nodes(nodes, tets, show_plt=True)
@@ -339,7 +284,7 @@ def main3():
 
 
 if __name__ == '__main__':
-    # SingleTet()
+    #SingleTet()
     # main2()
     main3()
     print("Runtime:", time.time()-start)

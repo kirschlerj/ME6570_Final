@@ -128,7 +128,7 @@ def stp_to_mesh(path_to_stp, show_gui, mesh_size_factor=1, save_inp=False):
     gmsh.finalize()
 
     # Use meshio to read gmsh file...
-    meshio_mesh = meshio.read(os.path.join("data", "t20.msh"))
+    meshio_mesh = meshio.read(os.path.join("data", filename+".msh"))
 
     # print("meshio_mesh:\n", meshio_mesh)
     # print("\n#------------------------------------------------------------------------------\n")

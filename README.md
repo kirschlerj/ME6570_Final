@@ -22,6 +22,7 @@ The python libraries used in this project are given below:
 - Gmsh: https://gmsh.info/doc/texinfo/gmsh.html
     - Python API: https://gitlab.onelab.info/gmsh/gmsh/blob/gmsh_4_11_1/api/gmsh.py
 - meshio: https://github.com/nschloe/meshio
+- imageio https://pypi.org/project/imageio/
 
 ### Optional: gmsh GUI, not required
 
