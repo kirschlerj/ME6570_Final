@@ -46,6 +46,35 @@ This follows a general format we use to pass arguments to scripts all the time:
 
 After this, `main.py` will call functions in `input.py` to generate a mesh of tets and return the variables into `main.py`. TODO: add info on force & BC's. After these steps are taken, the engine is called to solve for stress and strain. The data is then saved and plotted for analysis.
 
+## Abaqus
+
+To run Abaqus using the same part files as in the python code they were imported as STEP files. Gmsh has the ability to creat .inp files which can be directly imported into Abaqus but the software throws an error when attempting to assign material properties to the entire section as seen below:
+
+<img src="https://github.com/ColtonWright51/ME6570_Final/blob/487d2de24c1645b34c6908301b5eab5665bff01f/images/AbaqusPics/MaterialError.png" width="750" height="450">
+
+Because of this error the meshing operation had to be done using the Abaqus mesher instead of gmsh. For simplification of applying the boundary conditions and loads into both the Python code and Abaqus, we decided to use a hexagonal rod. One face of the rod was constrained using the boundary conditions that it could not displace or rotate. The other end was left free and a load which matched the 50,000 N in the code was applied as shown below:
+
+<img src="https://github.com/ColtonWright51/ME6570_Final/blob/c77790a24e273e6e40c1c877fdd457344982ca52/images/AbaqusPics/HexLoading.png" width="450" height="350">
+
+The mesh in this problem was initially made coarse with 65 tet elements and refined 10 times until reaching the free learning edition of Abaqus limit of 1,000 nodes. From this the max displacement in the y direction and Von Mises stress were analyzed for comparison to our engine. The results for this can be cound in the results comparison section. 
+
+## Results Comparison
+
+A comparison of the code results to the Abaqus results can be seen in the table below for validation of the program. Since they use different meshing teqniques the values might be slightly different and have different amounts of elements but this shows that the program can work as expected. 
+
+| Run # | Abaqus # of elms  | Abaqus max displacement | Python # of elms | Python max displacement | % difference |
+| ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
+| 1 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
+| 2 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
+| 3 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
+| 4 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
+| 5 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
+| 6 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
+| 7 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
+| 8 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
+| 9 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
+| 10 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
+
 # TODO
 
 - Input
@@ -56,7 +85,7 @@ After this, `main.py` will call functions in `input.py` to generate a mesh of te
     - Dan
 - Problem statement stuff
 - Comparison
-    - Cam?
+    - Cam
 - User manual in README
     - Colton
 - Flowchart
