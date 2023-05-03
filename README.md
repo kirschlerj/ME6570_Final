@@ -62,18 +62,13 @@ The mesh in this problem was initially made coarse with 65 tet elements and refi
 
 A comparison of the code results to the Abaqus results can be seen in the table below for validation of the program. Since they use different meshing teqniques the values might be slightly different and have different amounts of elements but this shows that the program can work as expected. 
 
-| Run # | Abaqus # of elms  | Abaqus max displacement | Python # of elms | Python max displacement | % difference |
+| Run # | Abaqus # of elms (mm)  | Abaqus max displacement | Python # of elms | Python max displacement (mm) | % error |
 | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
-| 1 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
-| 2 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
-| 3 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
-| 4 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
-| 5 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
-| 6 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
-| 7 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
-| 8 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
-| 9 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
-| 10 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
+| 1 | 45  | -0.00479  | 48 | -0.000076 | 98.4 |
+| 2 | 143  | -0.008835  | 160 | -0.000133 | 98.4 |
+| 3 | 518  | -0.01269 | 500 | -0.000269 | 97.8 |
+| 4 | 1037  | -0.0143  | 1474 | -0.000457 | 96.8 |
+| 5 | 2333  | -0.01563  | 2232 | -0.000510 | 96.7 |
 
 # TODO
 
