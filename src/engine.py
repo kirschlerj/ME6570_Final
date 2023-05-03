@@ -13,7 +13,7 @@ start = time.time()
 
 class Engine():
 
-    def __init__(self, nodes, tets, NBCs, EBCs, YoungsModulus, PoissonsRatio, ShearModulus, bricks=-1, Anisotropic = False):
+    def __init__(self, nodes, tets, NBCs, EBCs, YoungsModulus, PoissonsRatio, ShearModulus = False, bricks=-1, Anisotropic = False):
         print("Initialize engine...")
         self.init_material_properties(YoungsModulus, PoissonsRatio, ShearModulus, Anisotropic)
         self.nodes = nodes # Node positions
@@ -122,7 +122,7 @@ class Engine():
         return R
 
 
-    def init_material_properties(self, YoungsModulus, PoissonsRatio, ShearModulus):
+    def init_material_properties(self, YoungsModulus, PoissonsRatio, ShearModulus, Anisotropic):
         # defines D matrix given material properties for an isotropic material 
         Eps = YoungsModulus
         Mu = PoissonsRatio
@@ -241,8 +241,12 @@ def Mahogany2x4():
     SM = (10**9)*np.array([0.57, 0.85, 0.20]) # Shear Modulus input in form of [G12, G13, G23] Pa
     Mu = np.array([0.64, 0.30, 0.03, 0.26, 0.03, 0.60]) #Poissons Ratio input in form of [v12, v13, v21, v23, v31, v32]
 
-    full_path_to_stp = os.path.join(os.getcwd(), "data", "plank.step")
+    full_path_to_stp = os.path.join(os.getcwd(), "data", "plank.stp")
     nodes, tets = input.stp_to_mesh(full_path_to_stp, show_gui=True)
+
+    NBC = np.array([[]])
+    EBC = np.array([[46, 'x'],
+                    [48, 'x']])
 
 
 def main2():
