@@ -219,9 +219,9 @@ def SingleTet():
                             [0, 1, 0],
                             [0, 0, 1]])
         iconn = np.array([[0, 1, 2, 3]])
-        NBC = np.array([[3, 'z', 5000], [3, 'y', 5000], [3, 'x', 50000]])
+        NBC = np.array([[3, 'z', -50000], [3, 'y', 0]])
         EBC = np.array([[0, 'z'], [0, 'x'], [0, 'y'], [1, 'z'], [1, 'x'], [1, 'y'], [2, 'z'], [2, 'x'], [2, 'y']])
-        Eps = 196*10**11
+        Eps = 196e9
         Mu = 0.282
 
         single_tet_engine =Engine(elmesh1, iconn, NBC, EBC, Eps, Mu)
@@ -229,6 +229,7 @@ def SingleTet():
 
         import output
         output.plot_output(elmesh1, iconn, single_tet_engine.d)
+        print(single_tet_engine.d)
 
 def Mahogany2x4():
     # J. Lawerence Katz, Paulette Spencer, Yong Wang "On the anisotropic elastic properties of woods" Journal of Materials Science [Sep 2008]
@@ -325,10 +326,10 @@ def main3():
 
 
 if __name__ == '__main__':
-    #SingleTet()
+    SingleTet()
     # main2()
     #main3()
-    Mahogany2x4()
+    #Mahogany2x4()
     print("Runtime:", time.time()-start)
     plt.show()
 
