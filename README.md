@@ -112,7 +112,7 @@ It can be seen that the program has roughly 100% error for each of the runs rega
 
 The results of this show that as our elements get smaller there is still an error of around 90%, but it is decreasing. To check and see if this modeling error came from meshing differences we decided to create a simple .inp file which modeled a single tet with material properties, boundary conditions, and loads already applied so it could be successfully imported into Abaqus. Running the comparison between this file and our single tet model in Python it showed that the percent error was still roughly around --% with the max displacement in our model being -- mm and the max in Abaqus being --. Images of the Abaqus model and our python model can be seen below. 
 
-<img src="https://github.com/ColtonWright51/ME6570_Final/blob/c9993b792e8478c2be7268c571ecf914f05bef45/images/AbaqusPics/SingleTet.png" width="550" height="450">
+<img src="https://github.com/ColtonWright51/ME6570_Final/blob/c9993b792e8478c2be7268c571ecf914f05bef45/images/AbaqusPics/SingleTet.png" width="450" height="450">
 
 <img src="https://github.com/ColtonWright51/ME6570_Final/blob/c9993b792e8478c2be7268c571ecf914f05bef45/images/AbaqusPics/SingleTetDeflection.png" width="550" height="450">
 
