@@ -1,7 +1,7 @@
 import engine
 import test_input
 import matplotlib.pyplot as plt
-import test_output
+import output
 import numpy as np
 import os
 import input
@@ -42,7 +42,7 @@ for i, msf in enumerate(mesh_size_factors):
 
     engine1 = engine.Engine(nodes = nodes, tets = tets, NBCs = NBC, EBCs = EBC, YoungsModulus= youngs, PoissonsRatio= poisson)
     engine1.solve()
-    test_output.plot_all(engine1)
+    output.plot_all(engine1)
     df = df._append({'Displacement': np.max(engine1.d),
                     'Youngs Modulus': youngs,
                     'Poissons Ratio': poisson,
