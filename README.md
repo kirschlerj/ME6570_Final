@@ -70,12 +70,15 @@ The mesh in this problem was initially made coarse with 65 tet elements and refi
 `engine.py` was also ran to determine if the engine aligns with the results from Abaqus. Several different mesh size factors were passed into Gmsh to create fine and course meshes. The script `test_mesh_refinement.py` was used to generate the plots below:
 
 MSF = 0.255
+
 ![Alt text](images/hexrod_displacement_0255msf.png)
 
 MSF = 0.8
+
 ![Alt text](images/hexrod_displacement_08msf.png)
 
 MSF = 3.0
+
 ![Alt text](images/hexrod_displacement_3msf.png)
 
 ## Results Comparison
