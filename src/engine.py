@@ -221,7 +221,7 @@ def SingleTet():
         iconn = np.array([[0, 1, 2, 3]])
         NBC = np.array([[3, 'z', 5000], [3, 'y', 5000], [3, 'x', 50000]])
         EBC = np.array([[0, 'z'], [0, 'x'], [0, 'y'], [1, 'z'], [1, 'x'], [1, 'y'], [2, 'z'], [2, 'x'], [2, 'y']])
-        Eps = 196*10**11
+        Eps = 196*10**9
         Mu = 0.282
 
         single_tet_engine =Engine(elmesh1, iconn, NBC, EBC, Eps, Mu)
@@ -325,9 +325,9 @@ def main3():
 
 
 if __name__ == '__main__':
-    #SingleTet()
+    SingleTet()
     # main2()
-    main3()
+    # main3()
     # Mahogany2x4()
     print("Runtime:", time.time()-start)
     plt.show()
