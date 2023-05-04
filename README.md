@@ -17,8 +17,9 @@ All you need to do to run this code is execute the following command inside of a
 The python libraries used in this project are given below:
 
 - NumPy: https://numpy.org/
+- Matplotlib: https://matplotlib.org/
 - SciPy: https://www.scipy.org/
-- matplotlib: https://matplotlib.org/
+- pandas: https://pandas.pydata.org/
 - Gmsh: https://gmsh.info/doc/texinfo/gmsh.html
     - Python API: https://gitlab.onelab.info/gmsh/gmsh/blob/gmsh_4_11_1/api/gmsh.py
 - meshio: https://github.com/nschloe/meshio
@@ -74,38 +75,3 @@ A comparison of the code results to the Abaqus results can be seen in the table 
 | 8 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
 | 9 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
 | 10 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
-
-# TODO
-
-- Input
-    - Colton
-- Engine
-    - Jack
-- Output
-    - Dan
-- Problem statement stuff
-- Comparison
-    - Cam
-- User manual in README
-    - Colton
-- Flowchart
-    - High level broad
-    - Engine flowchart, more details
-    - Put in README I suppose
-
-5/1/2023
-
-- ABAQUS validation
-    - Cam
-- User Manual
-- Demonstration
-- Flex with bones and airplanes in engine.py
-- Multimaterial
-- Mesh refinement & error analysis
-- Break engine with truly unreasonable number of elements
-
-
-
-When $a \ne 0$, there are two solutions to $(ax^2 + bx + c = 0)$ and they are 
-
-$$x = {-b \pm \sqrt{b^2-4ac} \over 2a}$$
