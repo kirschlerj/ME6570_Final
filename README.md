@@ -67,7 +67,7 @@ Because of this error the meshing operation had to be done using the Abaqus mesh
 
 The mesh in this problem was initially made coarse with 65 tet elements and refined 10 times until reaching the free learning edition of Abaqus limit of 1,000 nodes. From this the max displacement in the y direction and Von Mises stress were analyzed for comparison to our engine. The results for this can be cound in the results comparison section.
 
-<img src="https://github.com/ColtonWright51/ME6570_Final/blob/7007a16d9c1f7f64eeeb110bde34d976a169c4ad/images/AbaqusPics/HexDeflection.png" width="450" height="450">
+<img src="https://github.com/ColtonWright51/ME6570_Final/blob/7007a16d9c1f7f64eeeb110bde34d976a169c4ad/images/AbaqusPics/HexDeflection.png" width="550" height="450">
 
 `engine.py` was also ran to determine if the engine aligns with the results from Abaqus. Several different mesh size factors were passed into Gmsh to create fine and course meshes. The script `test_mesh_refinement.py` was used to generate the plots below:
 
