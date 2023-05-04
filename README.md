@@ -90,6 +90,8 @@ MSF = 3.0
 
 ![Alt text](images/hexrod_displacement_3msf.png)
 
+An animation of the mesher was also created to visualize how Gmsh generates meshes. The animation was created by the script `test_mesh_refinement_animation.py` and is available in the `results` folder.
+
 ## Results Comparison
 
 When comparing results only 5 refinements were looked at since these were the closest the two meshes came to having the same number of elements. A comparison of the code results to the Abaqus results can be seen in the table below for validation of the program: 
