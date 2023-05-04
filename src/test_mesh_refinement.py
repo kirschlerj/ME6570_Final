@@ -18,7 +18,7 @@ load = -50000
 df = pd.DataFrame(columns=['Mesh Size Factor', 'Youngs Modulus', 'Poissons Ratio', 'Load', 'Number Elements','Number Nodes', 'Displacement', 'Points Loaded'])
 points_loaded = 0
 for i, msf in enumerate(mesh_size_factors):
-    nodes, tets = input.stp_to_mesh(os.path.join('.','data','hex_rod_mm.stp'), False, mesh_size_factor=msf)
+    nodes, tets = input.stp_to_mesh(os.path.join('.','data','hex_rod_mm.stp'), True, mesh_size_factor=msf)
     nodes = nodes
     print(nodes)
 
