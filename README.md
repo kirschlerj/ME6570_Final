@@ -45,7 +45,10 @@ This follows a general format we use to pass arguments to scripts all the time:
 
     python script.py data.cvs
 
-After this, `main.py` will call functions in `input.py` to generate a mesh of tets and return the variables into `main.py`. TODO: add info on force & BC's. After these steps are taken, the engine is called to solve for stress and strain. The data is then saved and plotted for analysis.
+After this, `main.py` will call functions in `input.py` to generate a mesh of tets and return the variables into `main.py`.  Essential and Natural Boundary Conditions can be added by following the examples inside `engine.py`. Any node can be fixed in the x, y, or z directions and any node can also be loaded in the x, y, or z directions. Output plots are created by `output.py`, and are shown below:
+
+![Alt text](images/t20_image2.png)
+
 
 ## Abaqus
 
