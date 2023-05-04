@@ -51,9 +51,12 @@ After this, `main.py` will call functions in `input.py` to generate a mesh of te
 
 
 ![Alt text](images/001.png)
+
 ![Alt text](images/120.png)
+
 ![Alt text](images/239.png)
 
+It is recommended to set `show_gui` to `True` when calling the input function `stp_to_mesh` so that the Gmsh GUI appears. This will allow you to view the generated mesh, and view nodes that you would like to apply BC's to. The easiest way to apply boundary conditions is to set an entire plane of the part equal to zero. For instance, in `test_mesh_refinement.py` all nodes on the x y plane are fixed. This is done by indexing through all nodes, checking if they are on the plane, and appending that node to a list of EBC's if on the plane. NBC's can be set by finding the x, y, and z coordinates of the desired loading point, indexing through all the nodes, and appending to a list of NBC's if the node is very near that coordinate. A distributed load would be more complex to implement. Index through all nodes and check if they are on the plane that you wish to add a distributed load to. Count how many nodes are in this plane, and distribute the total load across all the nodes inside the plane. Then append that force to the NBC list for each node in the plane. If you wish to apply a distributed load onto a curved surface, a similar process could work, but this would become more complex.
 
 ## Abaqus
 
