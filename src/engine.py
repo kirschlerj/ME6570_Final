@@ -318,7 +318,7 @@ def main3():
                     [150, 'z'],
                     [150, 'x'],
                     [150, 'y']])
-    engine = Engine(nodes, tets, NBC, EBC, YoungsModulus=196*10**11, PoissonsRatio=0.282)
+    engine = Engine(nodes, tets, NBC, EBC, YoungsModulus=196*10**5, PoissonsRatio=0.282)
     engine.solve()
     output.plot_all(engine)
 
@@ -327,8 +327,8 @@ def main3():
 if __name__ == '__main__':
     #SingleTet()
     # main2()
-    #main3()
-    Mahogany2x4()
+    main3()
+    # Mahogany2x4()
     print("Runtime:", time.time()-start)
     plt.show()
 

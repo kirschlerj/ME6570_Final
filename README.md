@@ -68,9 +68,13 @@ Because of this error the meshing operation had to be done using the Abaqus mesh
 
 <img src="https://github.com/ColtonWright51/ME6570_Final/blob/82dd11de9a5b5e1d19006ffcffca3c599938024a/images/AbaqusPics/HexLoading.png" width="450" height="350">
 
-The mesh in this problem was initially made coarse with 65 tet elements and refined 10 times until reaching the free learning edition of Abaqus limit of 1,000 nodes. From this the max displacement in the y direction and Von Mises stress were analyzed for comparison to our engine. The results for this can be cound in the results comparison section.
+The mesh in this problem was initially made coarse with 45 tet elements and refined 10 times until reaching the free learning edition of Abaqus limit of 1,000 nodes. From this the max displacement in the y direction and Von Mises stress was analyzed for comparison to our engine. The results for this can be cound in the results comparison section. An example of the displacement with 2333 linear tet elements can be seen below showing that the max value is at the node location where the load was applied:
 
 <img src="https://github.com/ColtonWright51/ME6570_Final/blob/7007a16d9c1f7f64eeeb110bde34d976a169c4ad/images/AbaqusPics/HexDeflection.png" width="550" height="450">
+
+To verify that this value is close to where it should converge the mesh test was also ran using quadratic tet elements with the element number reduced to not go over the 1,000 node limit. The results of this run showed that the max displacement is slightly higer with a displacement of -0.01739 mm. An image of these results can be seen below:
+
+<img src="https://github.com/ColtonWright51/ME6570_Final/blob/fffb2fd4fa43fca633e3010cc4cd9c2f400ed706/images/AbaqusPics/QuadElmDeflect.png" width="550" height="450">
 
 `engine.py` was also ran to determine if the engine aligns with the results from Abaqus. Several different mesh size factors were passed into Gmsh to create fine and course meshes. The script `test_mesh_refinement.py` was used to generate the plots below:
 
@@ -88,7 +92,7 @@ MSF = 3.0
 
 ## Results Comparison
 
-A comparison of the code results to the Abaqus results can be seen in the table below for validation of the program: 
+When comparing results only 5 refinements were looked at since these were the closest the two meshes came to having the same number of elements. A comparison of the code results to the Abaqus results can be seen in the table below for validation of the program: 
 
 | Run # | Abaqus # of elms (mm)  | Abaqus max displacement | Python # of elms | Python max displacement (mm) | % error |
 | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
@@ -98,7 +102,7 @@ A comparison of the code results to the Abaqus results can be seen in the table 
 | 4 | 1037  | -0.0143  | 1474 | -0.000457 | 96.8 |
 | 5 | 2333  | -0.01563  | 2232 | -0.000510 | 96.7 |
 
-It can be seen that the program has roughly 100% error for each of the runs regardless of the number of elements used but that it does not converge with the examples. Since Abaqus limits the number of nodes allowed in their free version we are not able to compare any higher than around 2000 elements with this system but our program can be tested with much higher numbers of elements to see how it converges. The comparison of this run with the max run allowedxd by Abuqus can be seen below:
+It can be seen that the program has roughly 100% error for each of the runs regardless of the number of elements used but that it does not converge with the examples. Since Abaqus limits the number of nodes allowed in their free version we are not able to compare any higher than around 2000 elements with this system but our program can be tested with much higher numbers of elements to see how it converges. The comparison of this run with the max run allowed by Abuqus can be seen below:
 
 | Abaqus # of elms (mm)  | Abaqus max displacement | Python # of elms | Python max displacement (mm) | % error |
 | ------------- | ------------- | ------------- | ------------- | ------------- |
