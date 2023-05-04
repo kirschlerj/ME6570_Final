@@ -7,7 +7,7 @@ import os
 import input
 import pandas as pd
 
-mesh_size_factors = np.array([.25, .255, .26, .3, .4, .6, .8, 1, 2, 3, 4, 6, 8, 10])
+mesh_size_factors = np.array([.255, .26, .3, .4, .6, .8, 1, 2, 3, 4, 6, 8, 10])
 EBC = []
 NBC = []
 
@@ -38,10 +38,11 @@ for i, msf in enumerate(mesh_size_factors):
     print(EBC)
     print(NBC)
     print(np.shape(nodes), np.shape(tets))
+    print(mesh_size_factors[i])
 
     engine1 = engine.Engine(nodes = nodes, tets = tets, NBCs = NBC, EBCs = EBC, YoungsModulus= youngs, PoissonsRatio= poisson)
     engine1.solve()
-    # test_output.plot_all(engine1)
+    test_output.plot_all(engine1)
     df = df._append({'Displacement': np.max(engine1.d),
                     'Youngs Modulus': youngs,
                     'Poissons Ratio': poisson,

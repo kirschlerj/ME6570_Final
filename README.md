@@ -65,7 +65,18 @@ Because of this error the meshing operation had to be done using the Abaqus mesh
 
 <img src="https://github.com/ColtonWright51/ME6570_Final/blob/82dd11de9a5b5e1d19006ffcffca3c599938024a/images/AbaqusPics/HexLoading.png" width="450" height="350">
 
-The mesh in this problem was initially made coarse with 65 tet elements and refined 10 times until reaching the free learning edition of Abaqus limit of 1,000 nodes. From this the max displacement in the y direction and Von Mises stress were analyzed for comparison to our engine. The results for this can be cound in the results comparison section. 
+The mesh in this problem was initially made coarse with 65 tet elements and refined 10 times until reaching the free learning edition of Abaqus limit of 1,000 nodes. From this the max displacement in the y direction and Von Mises stress were analyzed for comparison to our engine. The results for this can be cound in the results comparison section.
+
+`engine.py` was also ran to determine if the engine aligns with the results from Abaqus. Several different mesh size factors were passed into Gmsh to create fine and course meshes. The script `test_mesh_refinement.py` was used to generate the plots below:
+
+MSF = 0.255
+![Alt text](images/hexrod_displacement_0255msf.png)
+
+MSF = 0.8
+![Alt text](images/hexrod_displacement_08msf.png)
+
+MSF = 3.0
+![Alt text](images/hexrod_displacement_3msf.png)
 
 ## Results Comparison
 
