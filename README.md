@@ -55,23 +55,26 @@ To run Abaqus using the same part files as in the python code they were imported
 
 Because of this error the meshing operation had to be done using the Abaqus mesher instead of gmsh. For simplification of applying the boundary conditions and loads into both the Python code and Abaqus, we decided to use a hexagonal rod. One face of the rod was constrained using the boundary conditions that it could not displace or rotate. The other end was left free and a load which matched the 50,000 N in the code was applied as shown below:
 
-<img src="https://github.com/ColtonWright51/ME6570_Final/blob/c77790a24e273e6e40c1c877fdd457344982ca52/images/AbaqusPics/HexLoading.png" width="450" height="350">
+<img src="https://github.com/ColtonWright51/ME6570_Final/blob/82dd11de9a5b5e1d19006ffcffca3c599938024a/images/AbaqusPics/HexLoading.png" width="450" height="350">
 
 The mesh in this problem was initially made coarse with 65 tet elements and refined 10 times until reaching the free learning edition of Abaqus limit of 1,000 nodes. From this the max displacement in the y direction and Von Mises stress were analyzed for comparison to our engine. The results for this can be cound in the results comparison section. 
 
 ## Results Comparison
 
-A comparison of the code results to the Abaqus results can be seen in the table below for validation of the program. Since they use different meshing teqniques the values might be slightly different and have different amounts of elements but this shows that the program can work as expected. 
+A comparison of the code results to the Abaqus results can be seen in the table below for validation of the program: 
 
-| Run # | Abaqus # of elms  | Abaqus max displacement | Python # of elms | Python max displacement | % difference |
+| Run # | Abaqus # of elms (mm)  | Abaqus max displacement | Python # of elms | Python max displacement (mm) | % error |
 | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
-| 1 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
-| 2 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
-| 3 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
-| 4 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
-| 5 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
-| 6 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
-| 7 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
-| 8 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
-| 9 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
-| 10 | Content Cell  | Content Cell  | Content Cell | Content Cell | Content Cell |
+| 1 | 45  | -0.00479  | 48 | -0.000076 | 98.4 |
+| 2 | 143  | -0.008835  | 160 | -0.000133 | 98.4 |
+| 3 | 518  | -0.01269 | 500 | -0.000269 | 97.8 |
+| 4 | 1037  | -0.0143  | 1474 | -0.000457 | 96.8 |
+| 5 | 2333  | -0.01563  | 2232 | -0.000510 | 96.7 |
+
+It can be seen that the program has roughly 100% error for each of the runs regardless of the number of elements used but that it does not converge with the examples. Since Abaqus limits the number of nodes allowed in their free version we are not able to compare any higher than around 2000 elements with this system but our program can be tested with much higher numbers of elements to see how it converges. The comparison of this run with the max run allowedxd by Abuqus can be seen below:
+
+| Abaqus # of elms (mm)  | Abaqus max displacement | Python # of elms | Python max displacement (mm) | % error |
+| ------------- | ------------- | ------------- | ------------- | ------------- |
+| 2333  | -0.01563  | 22608 | -0.00123 | 92.1 |
+
+The results of this show that as our elements get smaller there is still an error of around 90%, but it is decreasing. This error could possibly be from meshing differences between gmsh and Abaqus since they are not completed the same way.
