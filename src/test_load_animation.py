@@ -40,7 +40,7 @@ for i in range(num_frames):
     engine1 = engine.Engine(nodes, tets, NBC, EBC, YoungsModulus=196*10**11, PoissonsRatio=0.282)
     engine1.solve()
     print(i)
-    output.plot_displacement(engine1, i, force_linspace[i], to_save=True, cmap_max=(1e-10))
+    output.plot_displacement(engine1, i, f"F={force_linspace[i]:.3f} N", to_save=True, cmap_max=(1e-10))
 
 png_dir = os.path.join(".", "images", "animation")
 

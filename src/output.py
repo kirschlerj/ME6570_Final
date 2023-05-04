@@ -111,11 +111,11 @@ def plot_all(engine_instance):
     cbar = fig4.colorbar(ax.collections[0], shrink=0.5)
     cbar.set_label("Displacement [m]")
 
-def plot_displacement(engine_instance, index, force, to_save=True, cmap_max=False):
+def plot_displacement(engine_instance, index, title1, to_save=True, cmap_max=False, path=None):
 
     e = engine_instance
     # Plot an exaggeration of the displacement of the part...
-    k=10000000000
+    k=1000
     d_reshaped = e.d.reshape(int(np.shape(e.d)[0]/3), 3)
     cmap_values = np.apply_along_axis(lambda row: np.sqrt(np.sum(row**2)), axis=1, arr=d_reshaped)
     cmap = plt.get_cmap('rainbow')
@@ -124,25 +124,28 @@ def plot_displacement(engine_instance, index, force, to_save=True, cmap_max=Fals
     # print("d_reshaped:\n", d_reshaped)
     displaced_coor = e.nodes + k*d_reshaped
     # print("displaced_coor:\n", displaced_coor)
-    fig4 = plt.figure(1)
+    fig4 = plt.figure()
     ax = fig4.add_subplot(111, projection='3d')
-    # ax.set_xlim(xmin=np.min(displaced_coor[:, 0]), xmax=np.max(displaced_coor[:, 0]))
-    # ax.set_ylim(ymin=np.min(displaced_coor[:, 1]), ymax=np.max(displaced_coor[:, 1]))
-    # ax.set_zlim(zmin=np.min(displaced_coor[:, 2]), zmax=np.max(displaced_coor[:, 2]))
-    ax.set_xlim(xmin=-20, xmax=20)
-    ax.set_ylim(ymin=155, ymax=190)
-    ax.set_zlim(zmin=-20, zmax=20)
+    ax.set_xlim(xmin=np.min(displaced_coor[:, 0]), xmax=np.max(displaced_coor[:, 0]))
+    ax.set_ylim(ymin=np.min(displaced_coor[:, 1]), ymax=np.max(displaced_coor[:, 1]))
+    ax.set_zlim(zmin=np.min(displaced_coor[:, 2]), zmax=np.max(displaced_coor[:, 2]))
+    # ax.set_xlim(xmin=-20, xmax=20)
+    # ax.set_ylim(ymin=155, ymax=190)
+    # ax.set_zlim(zmin=-20, zmax=20)
     ax.set_xlabel("[mm]")
-    title = ax.set_title(f"F={force:.3f} N")
+    title = ax.set_title(title1)
     ax.scatter(displaced_coor[:, 0], displaced_coor[:, 1], displaced_coor[:, 2], c=cmap_values, cmap=cmap)
-    cbar = fig4.colorbar(ax.collections[0], shrink=0.5)
+    # cbar = fig4.colorbar(ax.collections[0], shrink=0.5)
     if cmap_max != False:
         cbar = fig4.colorbar(ax.collections[0], shrink=0.5)
     else:
         cbar = fig4.colorbar(ax.collections[0], shrink=0.5)
     cbar.set_label("Displacement [m]")
     if to_save:
-        PATH = os.path.join(".", "images", "animation")
+        if path:
+            PATH = os.path.join(".", "images", path)
+        else:
+            PATH = os.path.join(".", "images", "animation")
         os.makedirs(PATH, exist_ok=True)
         index_formatted = '{:0>3}'.format(index)
         FILE_PATH = os.path.join(PATH, index_formatted + ".png")
