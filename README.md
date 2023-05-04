@@ -65,7 +65,11 @@ Because of this error the meshing operation had to be done using the Abaqus mesh
 
 <img src="https://github.com/ColtonWright51/ME6570_Final/blob/82dd11de9a5b5e1d19006ffcffca3c599938024a/images/AbaqusPics/HexLoading.png" width="450" height="350">
 
-The mesh in this problem was initially made coarse with 65 tet elements and refined 10 times until reaching the free learning edition of Abaqus limit of 1,000 nodes. From this the max displacement in the y direction and Von Mises stress were analyzed for comparison to our engine. The results for this can be cound in the results comparison section.
+The mesh in this problem was initially made coarse with 65 tet elements and refined 10 times until reaching the free learning edition of Abaqus limit of 1,000 nodes. From this the max displacement in the y direction and Von Mises stress was analyzed for comparison to our engine. The results for this can be cound in the results comparison section. An example of the displacement with 2333 linear tet elements can be seen below showing that the max value is at the node location where the load was applied:
+
+<img src="https://github.com/ColtonWright51/ME6570_Final/blob/7007a16d9c1f7f64eeeb110bde34d976a169c4ad/images/AbaqusPics/HexDeflection.png" width="550" height="450">
+
+To verify that this value is close to where it should converge the mesh test was also ran using quadratic tet elements with the element number reduced to not go over the 1,000 node limit. The results of this run showed that the max displacement is slightly higer with a displacement of -0.01739. An image of these results can be seen below:
 
 <img src="https://github.com/ColtonWright51/ME6570_Final/blob/7007a16d9c1f7f64eeeb110bde34d976a169c4ad/images/AbaqusPics/HexDeflection.png" width="550" height="450">
 
