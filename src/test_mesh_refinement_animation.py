@@ -2,12 +2,14 @@ import engine
 import test_input
 import matplotlib.pyplot as plt
 import test_output
+import output
 import numpy as np
 import os
 import input
 import pandas as pd
 
-mesh_size_factors = np.array([.255, .26, .3, .4, .6, .8, 1, 2, 3, 4, 6, 8, 10])
+num_frames = 8*30
+mesh_size_factors = np.linspace(10, .3, num_frames)
 EBC = []
 NBC = []
 
@@ -18,7 +20,7 @@ load = -50000
 df = pd.DataFrame(columns=['Mesh Size Factor', 'Youngs Modulus', 'Poissons Ratio', 'Load', 'Number Elements','Number Nodes', 'Displacement', 'Points Loaded'])
 points_loaded = 0
 for i, msf in enumerate(mesh_size_factors):
-    nodes, tets = input.stp_to_mesh(os.path.join('.','data','hex_rod_mm.stp'), True, mesh_size_factor=msf)
+    nodes, tets = input.stp_to_mesh(os.path.join('.','data','hex_rod_mm.stp'), False, mesh_size_factor=msf)
     nodes = nodes
     print(nodes)
 
@@ -42,7 +44,7 @@ for i, msf in enumerate(mesh_size_factors):
 
     engine1 = engine.Engine(nodes = nodes, tets = tets, NBCs = NBC, EBCs = EBC, YoungsModulus= youngs, PoissonsRatio= poisson)
     engine1.solve()
-    test_output.plot_all(engine1)
+    output.plot_displacement(engine1, i, f"MSF = {msf:.3f}", path="anim2")
     df = df._append({'Displacement': np.max(engine1.d),
                     'Youngs Modulus': youngs,
                     'Poissons Ratio': poisson,

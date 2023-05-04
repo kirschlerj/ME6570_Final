@@ -1,5 +1,6 @@
 # Don't put thousands of images on github
 /images/animation
+/images/anim2
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
