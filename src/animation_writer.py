@@ -5,7 +5,7 @@ Stitch together all the pictures and make an animation
 import os
 import imageio
 
-png_dir = os.path.join(".", "images", "animation")
+png_dir = os.path.join(".", "images", "anim2")
 
 png_files = sorted([os.path.join(png_dir, f) for f in os.listdir(png_dir) if f.endswith('.png')])
 
